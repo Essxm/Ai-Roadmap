@@ -1,0 +1,2877 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام خريطة التعلم الذكية - الذكاء الاصطناعي والأتمتة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #7209b7;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --info: #4895ef;
+            --bg-gradient: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --glow: 0 0 20px rgba(67, 97, 238, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7ff 0%, #e6eeff 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* تصميم الهيدر مع تأثيرات متقدمة */
+        header {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            animation: headerSlide 1s ease-out;
+        }
+
+        @keyframes headerSlide {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: 0;
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            animation: textGlow 3s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+            100% { text-shadow: 0 0 20px rgba(255,255,255,0.8); }
+        }
+
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            opacity: 0.9;
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .floating-element {
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
+        }
+
+        /* تصميم الحاوية الرئيسية */
+        .container {
+            max-width: 1600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+            animation: containerFade 1s ease-out 0.5s both;
+        }
+
+        @keyframes containerFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* الشريط الجانبي */
+        .sidebar {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(67, 97, 238, 0.1);
+        }
+
+        .sidebar:hover {
+            box-shadow: var(--glow);
+            transform: translateY(-5px);
+        }
+
+        /* تصميم الإحصائيات */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover i {
+            transform: scale(1.2);
+            color: var(--accent);
+        }
+
+        .stat-card h3 {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover h3 {
+            color: var(--accent);
+        }
+
+        /* شريط التقدم الدائري */
+        .progress-circle-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 1rem auto;
+        }
+
+        .progress-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) 0% 0%, #e0e0e0 0% 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: all 1s ease;
+            box-shadow: 0 0 20px rgba(76, 201, 240, 0.3);
+        }
+
+        .progress-circle::before {
+            content: "";
+            position: absolute;
+            width: 85%;
+            height: 85%;
+            background: white;
+            border-radius: 50%;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .progress-text {
+            position: absolute;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--secondary);
+            z-index: 1;
+        }
+
+        /* عناصر التحكم */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--info);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(67, 97, 238, 0.1);
+        }
+
+        .main-content:hover {
+            box-shadow: var(--glow);
+        }
+
+        /* شبكة الأيام */
+        .days-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .day-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--primary);
+            cursor: pointer;
+            height: fit-content;
+            position: relative;
+            overflow: hidden;
+            animation: cardAppear 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+
+        @keyframes cardAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .day-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .day-card:hover::before {
+            opacity: 1;
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .day-card.completed {
+            border-left-color: var(--success);
+            background: linear-gradient(135deg, #f8fff8 0%, white 100%);
+        }
+
+        .day-card.completed::after {
+            content: "✓";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--success);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+        }
+
+        .day-number {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .day-card:hover .day-number {
+            transform: scale(1.1) rotate(10deg);
+            background: var(--accent);
+        }
+
+        .day-card.completed .day-number {
+            background: var(--success);
+        }
+
+        .day-title {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            min-height: 3.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .day-card:hover .day-title {
+            color: var(--accent);
+        }
+
+        .topics {
+            margin: 1rem 0;
+        }
+
+        .topic {
+            background: #f0f4ff;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            border-right: 4px solid var(--info);
+            transition: all 0.3s ease;
+        }
+
+        .day-card:hover .topic {
+            transform: translateX(5px);
+            border-right-color: var(--accent);
+        }
+
+        .topic-title {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .topic-desc {
+            font-size: 0.8rem;
+            color: #555;
+        }
+
+        .tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .tool {
+            background: var(--info);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            transition: all 0.3s ease;
+        }
+
+        .day-card:hover .tool {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .outcome {
+            background: #e8f5e9;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-right: 4px solid var(--success);
+            transition: all 0.3s ease;
+        }
+
+        .day-card:hover .outcome {
+            transform: translateX(5px);
+            border-right-color: var(--accent);
+        }
+
+        .outcome-title {
+            font-weight: bold;
+            color: #2e7d32;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* المودال */
+        .day-details-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            animation: modalFade 0.3s ease;
+        }
+
+        @keyframes modalFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .day-details-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlide 0.5s ease;
+        }
+
+        @keyframes modalSlide {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--warning);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.3);
+        }
+
+        .close-modal:hover {
+            transform: scale(1.1) rotate(90deg);
+            background: #d0006f;
+        }
+
+        /* الرسوم البيانية */
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow);
+        }
+
+        .chart-title {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+        /* التذييل */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            grid-column: 1 / -1;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* التبويبات */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background: #f0f4ff;
+            color: var(--dark);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: var(--info);
+            color: white;
+        }
+
+        /* البحث والتصفية */
+        .search-box {
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .search-box input {
+            padding: 0.8rem 1rem 0.8rem 3rem;
+            border-radius: 30px;
+            border: 2px solid var(--info);
+            width: 100%;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(67, 97, 238, 0.3);
+        }
+
+        .search-box i {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            color: var(--info);
+        }
+
+        /* التكيف مع الشاشات المختلفة */
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+            
+            .days-container {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .days-container {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .progress-circle-container {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        /* تأثيرات إضافية */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="floating-elements">
+            <div class="floating-element" style="width: 80px; height: 80px; top: 10%; left: 10%; animation-duration: 20s;"></div>
+            <div class="floating-element" style="width: 60px; height: 60px; top: 70%; left: 80%; animation-duration: 25s;"></div>
+            <div class="floating-element" style="width: 100px; height: 100px; top: 40%; left: 60%; animation-duration: 30s;"></div>
+            <div class="floating-element" style="width: 40px; height: 40px; top: 20%; left: 90%; animation-duration: 15s;"></div>
+        </div>
+        <h1>نظام خريطة التعلم الذكية</h1>
+        <p>رحلة تفاعلية شاملة لإتقان الذكاء الاصطناعي والأتمتة في 60 يومًا</p>
+    </header>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3 id="totalDays">60 يوم</h3>
+                    <p>مدة الخطة</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-tools"></i>
+                    <h3 id="totalTools">35+ أداة</h3>
+                    <p>أدوات ستتقنها</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-project-diagram"></i>
+                    <h3 id="totalProjects">25 مشروع</h3>
+                    <p>مشاريع عملية</p>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <h3 style="text-align: center; margin-bottom: 1rem;">تقدمك الشامل</h3>
+                <div class="progress-circle-container">
+                    <div class="progress-circle" id="progressCircle">
+                        <div class="progress-text" id="progressText">0%</div>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 1rem;">أكمل <span id="completedDays">0</span> من 60 يومًا</p>
+            </div>
+
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="ابحث في الخطة...">
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" data-filter="all">كل الأيام</button>
+                <button class="tab" data-filter="completed">المكتملة</button>
+                <button class="tab" data-filter="pending">غير المكتملة</button>
+            </div>
+
+            <div class="charts-container">
+                <div class="chart-card">
+                    <div class="chart-title">التقدم الأسبوعي</div>
+                    <div class="chart-container">
+                        <canvas id="weeklyChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">توزيع المهارات</div>
+                    <div class="chart-container">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="markComplete" class="btn-success">
+                    <i class="fas fa-check-circle"></i> تعليم اليوم كمكتمل
+                </button>
+                <button id="resetProgress" class="btn-warning">
+                    <i class="fas fa-redo"></i> إعادة التعيين
+                </button>
+                <button id="exportProgress" class="btn-secondary">
+                    <i class="fas fa-download"></i> تصدير التقدم
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="tabs" id="weekTabs">
+                <!-- سيتم إضافة تبويبات الأسابيع ديناميكيًا -->
+            </div>
+
+            <div class="days-container" id="daysContainer">
+                <!-- سيتم إضافة بطاقات الأيام ديناميكيًا -->
+            </div>
+
+            <div class="motivation-card" style="background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); border-radius: 15px; padding: 2rem; text-align: center; margin-top: 2rem; color: white; box-shadow: var(--card-shadow);">
+                <i class="fas fa-rocket" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                <h2 style="margin-bottom: 1rem;">أنت على الطريق الصحيح!</h2>
+                <p id="motivationText">استمر في التقدم، كل يوم تقضيه في التعلم يقربك من هدفك</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="day-details-modal" id="dayDetailsModal">
+        <div class="day-details-content" id="dayDetailsContent">
+            <!-- سيتم عرض تفاصيل اليوم هنا -->
+        </div>
+    </div>
+
+    <footer>
+        <p>نظام خريطة التعلم الذكية - الذكاء الاصطناعي والأتمتة</p>
+        <p>تم التصميم باستخدام أحدث تقنيات الويب لتقديم أفضل تجربة تعلم</p>
+    </footer>
+
+    <script>
+        // بيانات خطة التعلم (يجب وضع بيانات roadmap الكاملة هنا)
+     const roadmap = [
+    // الأسبوع 1-2: أساسيات البرومبت الهندسي
+    {
+        week: "الأسبوع 1-2: أساسيات البرومبت الهندسي",
+        days: [
+            {
+                day: 1,
+                title: "أساسيات كتابة البرومبت",
+                topics: [
+                    {
+                        title: "هياكل البرومبت الأساسية",
+                        desc: "تعلم Persona + Context + Goal + Format كأساس لكتابة أي برومبت",
+                        benefits: "هذا الهيكل يساعد النموذج على فهم الدور المطلوب منه والسياق والهدف النهائي، مما يحسن جودة الإجابات بنسبة 70%"
+                    },
+                    {
+                        title: "أنواع البرومبت المختلفة",
+                        desc: "برومبت التعليم، الإبداع، التحليل، التلخيص وغيرها",
+                        benefits: "معرفة أنواع البرومبت المختلفة يسمح لك باختيار النوع المناسب لكل مهمة، مما يوفر الوقت ويحسن النتائج"
+                    },
+                    {
+                        title: "كتابة برومبت فعالة",
+                        desc: "كيفية صياغة الأوامر بشكل واضح ومحدد للحصول على أفضل النتائج",
+                        benefits: "البرومبت الواضحة توفر 50% من الوقت الذي تقضيه في التعديلات وتحسن دقة النتائج بشكل ملحوظ"
+                    }
+                ],
+                tools: ["ChatGPT", "Claude", "Gemini"],
+                outcome: "القدرة على كتابة برومبت فعالة لأي غرض بسهولة",
+                details: "في هذا اليوم، ستتعلم الأساسيات الأولى للتعامل مع النماذج اللغوية. ستفهم الفرق بين البرومبت الجيدة والسيئة، وكيفية هيكلة طلباتك للحصول على أفضل النتائج.",
+                additionalInfo: "💡 معلومة مهمة: البرومبت الجيدة يمكن أن تحسن دقة النتائج بنسبة تصل إلى 80% مقارنة بالطلبات العادية"
+            },
+            {
+                day: 2,
+                title: "البرومبت المتقدمة والتدرج في التفكير",
+                topics: [
+                    {
+                        title: "Chain-of-Thought Prompting",
+                        desc: "تعلم كيفية تفكيك المشكلات المعقدة إلى خطوات صغيرة",
+                        benefits: "هذه التقنية تحسن قدرة النموذج على حل المسائل المعقدة بنسبة 60% وتجعله يظهر عملية التفكير خطوة بخطوة"
+                    },
+                    {
+                        title: "Tree-of-Thought Prompting",
+                        desc: "استكشاف حلول متعددة للمشكلة الواحدة",
+                        benefits: "تسمح لك بمقارنة عدة حلول للمشكلة نفسها واختيار الأفضل، مما يزيد من جودة الحلول النهائية"
+                    },
+                    {
+                        title: "التفكير المتدرج",
+                        desc: "تمكين النموذج من التفكير خطوة بخطوة لحل المشكلات المعقدة",
+                        benefits: "تجعل النموذج أكثر منهجية في حله للمشكلات وتقلل من الأخطاء المنطقية"
+                    }
+                ],
+                tools: ["ChatGPT Plus", "Claude Pro"],
+                outcome: "القدرة على حل المشكلات المعقدة باستخدام البرومبت المتقدمة",
+                details: "اليوم سترتقي بمهاراتك إلى المستوى التالي. ستتعلم تقنيات متقدمة تجعل النماذج اللغوية تحل مشكلات معقدة عن طريق تفكيكها إلى خطوات أصغر.",
+                additionalInfo: "🚀 هذه التقنيات تستخدمها شركات مثل Google وMicrosoft في أنظمتها المتقدمة للذكاء الاصطناعي"
+            },
+            {
+                day: 3,
+                title: "البرومبت المنطقية والشرطية",
+                topics: [
+                    {
+                        title: "استخدام IF/THEN في البرومبت",
+                        desc: "بناء برومبت ذكية تتخذ قرارات بناءً على المدخلات",
+                        benefits: "تمكنك من بناء أنظمة ذكية تتكيف مع المدخلات المختلفة دون تدخل يدوي"
+                    },
+                    {
+                        title: "المتغيرات في البرومبت",
+                        desc: "استخدام placeholders لإنشاء برومبت ديناميكية",
+                        benefits: "توفر الوقت والجهد في كتابة برومبت متشابهة لمهام مختلفة"
+                    },
+                    {
+                        title: "المنطق الشرطي",
+                        desc: "إنشاء برومبت تتخذ قرارات بناءً على شروط محددة",
+                        benefits: "تجعل التفاعل مع النموذج أكثر ذكاءً واستجابة للظروف المختلفة"
+                    }
+                ],
+                tools: ["ChatGPT", "Custom Instructions"],
+                outcome: "إنشاء برومبت ذكية تتكيف مع مختلف السيناريوهات",
+                details: "ستتعلم اليوم كيفية جعل البرومبت الخاصة بك أكثر ذكاءً من خلال إدخال المنطق الشرطي. هذا سيمكنك من إنشاء أنظمة ذكية تتخذ قرارات بناءً على المدخلات المختلفة.",
+                additionalInfo: "🔧 يمكن استخدام هذه التقنيات في بناء أنظمة دعم القرار الآلية للشركات"
+            },
+            {
+                day: 4,
+                title: "برومبت التخصصات المهنية",
+                topics: [
+                    {
+                        title: "برومبت التسويق والمبيعات",
+                        desc: "إنشاء محتوى تسويقي، إعلانات، رسائل بريد إلكتروني",
+                        benefits: "تسريع عملية إنشاء المحتوى التسويقي بنسبة 90% مع تحسين جودته"
+                    },
+                    {
+                        title: "برومبت البرمجة والتحليل التقني",
+                        desc: "كتابة كود، شرح كود، تحليل أنظمة",
+                        benefits: "تقليل وقت البرمجة بنسبة 40% وتحسين جودة الكود المكتوب"
+                    },
+                    {
+                        title: "برومبت التصميم والإبداع",
+                        desc: "توليد أفكار إبداعية، نصوص إعلانية، استراتيجيات محتوى",
+                        benefits: "توليد أفكار إبداعية بسرعة فائقة وتنويع مصادر الإلهام"
+                    }
+                ],
+                tools: ["ChatGPT", "Industry-specific prompts"],
+                outcome: "القدرة على إنشاء برومبت متخصصة لمجال عملك",
+                details: "اليوم ستركز على التخصص. ستتعلم كيفية تكييف البرومبت لمجالات محددة مثل التسويق، البرمجة، التصميم وغيرها من المجالات المهنية.",
+                additionalInfo: "💼 هذه المهارة تزيد من قيمتك في سوق العمل حيث يمكنك التخصص في مجال معين"
+            },
+            {
+                day: 5,
+                title: "System Prompts والتحكم في السلوك",
+                topics: [
+                    {
+                        title: "فهم System Prompts",
+                        desc: "كيفية توجيه سلوك النموذج بشكل دائم وليس لكل محادثة",
+                        benefits: "توفير الوقت في تكرار التعليمات في كل محادثة والحفاظ على سلوك متسق"
+                    },
+                    {
+                        title: "بناء مساعد شخصي متخصص",
+                        desc: "إنشاء مساعد مخصص لمجال معين أو مهمة محددة",
+                        benefits: "زيادة الإنتاجية الشخصية من خلال مساعد مخصص يفهم احتياجاتك الخاصة"
+                    },
+                    {
+                        title: "التحكم في نبرة وطريقة الرد",
+                        desc: "تحديد شخصية ونهج الرد للنموذج اللغوي",
+                        benefits: "جعل التفاعل مع النموذج أكثر طبيعية واحترافية حسب السياق"
+                    }
+                ],
+                tools: ["ChatGPT Custom Instructions", "Claude"],
+                outcome: "القدرة على تخصيص مساعد ذكي لاحتياجاتك الخاصة",
+                details: "ستتعلم اليوم كيفية توجيه النماذج اللغوية لتعمل بشكل متسق وفقًا لشخصية وسلوك محددين. هذا أساسي لبناء مساعدين متخصصين.",
+                additionalInfo: "🎯 System Prompts هي السر وراء المساعدات المتخصصة في الشركات الكبرى"
+            },
+            {
+                day: 6,
+                title: "مشروع أسبوعي - مساعد متكامل",
+                topics: [
+                    {
+                        title: "تصميم مساعد شخصي متكامل",
+                        desc: "دمجم كل ما تعلمته في أسبوع لبناء مساعد ذكي",
+                        benefits: "تطبيق عملي يثبت مهاراتك ويصبح مشروعًا يمكن إضافته لبروفايلك"
+                    },
+                    {
+                        title: "اختبار وتحسين المساعد",
+                        desc: "تحسين أداء المساعد بناءً على الاختبارات",
+                        benefits: "تعلم منهجية التحسين المستمر التي تستخدم في الشركات التقنية"
+                    },
+                    {
+                        title: "توثيق المشروع",
+                        desc: "إنشاء دليل استخدام للمساعد الذي قمت ببنائه",
+                        benefits: "مهارة مهمة في سوق العمل حيث توضح قدرتك على تقديم حلول متكاملة"
+                    }
+                ],
+                tools: ["ChatGPT", "Claude", "Prompt Libraries"],
+                outcome: "مساعد شخصي متكامل يمكنه مساعدتك في مهام متعددة",
+                details: "اليوم هو يوم التطبيق العملي. ستقوم ببناء مساعد شخصي متكامل باستخدام كل التقنيات التي تعلمتها خلال الأسبوع.",
+                additionalInfo: "📁 هذا المشروع سيكون أول إضافة قوية لبروفايلك المهني"
+            },
+            {
+                day: 7,
+                title: "مراجعة وتطبيقات عملية",
+                topics: [
+                    {
+                        title: "مراجعة الأسبوع الأول",
+                        desc: "تثبيت المفاهيم وتصحيح الأخطاء",
+                        benefits: "ضمان فهم متين للأساسيات قبل الانتقال للمستوى التالي"
+                    },
+                    {
+                        title: "تطبيقات عملية متنوعة",
+                        desc: "تطبيق البرومبت على سيناريوهات حقيقية",
+                        benefits: "تعزيز الثقة في المهارات المكتسبة من خلال التطبيق العملي"
+                    },
+                    {
+                        title: "تخطيط للأسبوع القادم",
+                        desc: "تحضير الأدوات والمفاهيم للأسبوع الثاني",
+                        benefits: "الاستعداد المبكر يضمن استفادة أكبر من الأسبوع القادم"
+                    }
+                ],
+                tools: ["ChatGPT", "Claude", "Gemini"],
+                outcome: "إتقان أساسيات البرومبت وجاهزية للتقدم للمستوى التالي",
+                details: "اليوم مخصص للمراجعة والتطبيق. ستقوم بتثبيت كل ما تعلمته خلال الأسبوع وتطبيقه على سيناريوهات عملية متنوعة.",
+                additionalInfo: "🔄 المراجعة المنتظمة تزيد من retention المعلومات بنسبة 80%"
+            }
+        ]
+    },
+    // الأسبوع 3-4: أساسيات الأتمتة
+    {
+        week: "الأسبوع 3-4: أساسيات الأتمتة",
+        days: [
+            {
+                day: 8,
+                title: "مقدمة في أتمتة العمليات",
+                topics: [
+                    {
+                        title: "ما هي أتمتة العمليات؟",
+                        desc: "فهم مفهوم الأتمتة وأهميتها في الأعمال الحديثة",
+                        benefits: "توفير حتى 80% من الوقت المستغرق في المهام المتكررة"
+                    },
+                    {
+                        title: "أدوات الأتمتة الأساسية",
+                        desc: "مقدمة عن Zapier، Make، n8n وأدوات أخرى",
+                        benefits: "معرفة الأدوات المناسبة لكل نوع من أنواع الأتمتة توفر الوقت والمال"
+                    },
+                    {
+                        title: "تحديد العمليات القابلة للأتمتة",
+                        desc: "كيفية اكتشاف المهام المتكررة التي يمكن أتمتها",
+                        benefits: "تمكنك من تحديد الفرص الأكثر تأثيرًا لأتمتة العمليات في أي شركة"
+                    }
+                ],
+                tools: ["Zapier", "Make", "n8n"],
+                outcome: "فهم أساسيات الأتمتة وتحديد العمليات القابلة للأتمتة",
+                details: "اليوم ستبدأ رحلتك في عالم الأتمتة. ستتعرف على المفهوم والأدوات الأساسية، وكيفية اكتشاف الفرص للأتمتة في عملك اليومي.",
+                additionalInfo: "📊 الشركات التي تطبق الأتمتة توفر في المتوسط 30% من تكاليف التشغيل"
+            },
+            {
+                day: 9,
+                title: "إتقان Zapier - الجزء الأول",
+                topics: [
+                    {
+                        title: "واجهة Zapier",
+                        desc: "التعرف على مكونات Zapier: Triggers، Actions، Searches",
+                        benefits: "فهم هذه المكونات يمثل 90% من تعلم Zapier"
+                    },
+                    {
+                        title: "بناء أول ZAP",
+                        desc: "إنشاء أتمتة بسيطة: حفظ مرفقات البريد الإلكتروني في Google Drive",
+                        benefits: "أول خطوة عملية في بناء سيرتك الذاتية في مجال الأتمتة"
+                    },
+                    {
+                        title: "اختبار وتصحيح الأتمتة",
+                        desc: "كيفية اختبار الأتمتة وتصحيح الأخطاء",
+                        benefits: "مهارة أساسية تضمن نجاح مشاريع الأتمتة في بيئات العمل الحقيقية"
+                    }
+                ],
+                tools: ["Zapier", "Gmail", "Google Drive"],
+                outcome: "القدرة على إنشاء أتمتات بسيطة باستخدام Zapier",
+                details: "ستتعلم اليوم استخدام واحدة من أشهر أدوات الأتمتة (Zapier). ستبدأ بإنشاء أتمتات بسيطة وتتعرف على مكونات النظام الأساسي.",
+                additionalInfo: "💸 متوسط راتب متخصص Zapier في الخليج يصل إلى 25,000 ريال"
+            },
+            {
+                day: 10,
+                title: "إتقان Zapier - الجزء الثاني",
+                topics: [
+                    {
+                        title: "Zapier المتقدمة",
+                        desc: "استخدام Paths، Filters، Formatter في Zapier",
+                        benefits: "تمكنك من بناء أتمتات معقدة تغطي 95% من احتياجات الشركات"
+                    },
+                    {
+                        title: "دمج تطبيقات متعددة",
+                        desc: "ربط أكثر من تطبيقين في أتمتة واحدة",
+                        benefits: "زيادة قيمة الأتمتة من خلال دمج múltiples أنظمة معًا"
+                    },
+                    {
+                        title: "إدارة الأخطاء والاستثناءات",
+                        desc: "كيفية التعامل مع الحالات غير المتوقعة في الأتمتة",
+                        benefits: "ضمان استمرارية العمل حتى في الظروف غير المتوقعة"
+                    }
+                ],
+                tools: ["Zapier", "Slack", "Trello", "Google Sheets"],
+                outcome: "القدرة على بناء أتمتات معقدة باستخدام Zapier",
+                details: "اليوم سترتقي بمهاراتك في Zapier إلى المستوى المتقدم. ستتعلم تقنيات متقدمة مثل التفرع والتصفية والتعامل مع الأخطاء.",
+                additionalInfo: "🚀 70% من الشركات الناشئة تستخدم Zapier لأتمتة عملياتها"
+            },
+            {
+                day: 11,
+                title: "الانتقال إلى Make - الجزء الأول",
+                topics: [
+                    {
+                        title: "مقدمة عن Make",
+                        desc: "لماذا Make أقوى من Zapier في بعض الحالات",
+                        benefits: "تمكنك من اختيار الأداة المناسبة لكل مشروع وتوفير التكاليف"
+                    },
+                    {
+                        title: "بناء Scenario أولي",
+                        desc: "تعلم واجهة Make وبناء أول سيناريو",
+                        benefits: "إتقان أداة إضافية يوسع من فرصك في سوق العمل"
+                    },
+                    {
+                        title: "المقارنة بين Make وZapier",
+                        desc: "متى نستخدم كل أداة ولماذا",
+                        benefits: "اتخاذ قرارات مستنيرة في اختيار أدوات الأتمتة للمشاريع المختلفة"
+                    }
+                ],
+                tools: ["Make", "Gmail", "Google Calendar"],
+                outcome: "فهم أساسيات Make والقدرة على بناء سيناريوهات بسيطة",
+                details: "ستتعرف اليوم على أداة Make القوية، والتي تمنحك تحكمًا أكبر في عمليات الأتمتة المعقدة. ستبدأ ببناء سيناريوهات بسيطة وتتعرف على واجهة المستخدم.",
+                additionalInfo: "💪 Make تتعامل مع عمليات معقدة بشكل أفضل من Zapier وتوفر مرونة أكبر"
+            },
+            {
+                day: 12,
+                title: "الانتقال إلى Make - الجزء الثاني",
+                topics: [
+                    {
+                        title: "Make المتقدمة",
+                        desc: "استخدام Routes، Iterators، Aggregators",
+                        benefits: "تمكنك من بناء أنظمة أتمتة معقدة تنافس الأنظمة المبرمجة خصيصًا"
+                    },
+                    {
+                        title: "معالجة الأخطاء في Make",
+                        desc: "كيفية التعامل مع الأخطاء وإنشاء سيناريوهات مرنة",
+                        benefits: "ضمان موثوقية أنظمة الأتمتة في بيئات الإنتاج"
+                    },
+                    {
+                        title: "تحسين أداء السيناريوهات",
+                        desc: "تقليل وقت التنفيذ وتحسين كفاءة الأتمتة",
+                        benefits: "توفير التكاليف ورفع كفاءة العمليات في الشركات الكبرى"
+                    }
+                ],
+                tools: ["Make", "HTTP", "Data Stores"],
+                outcome: "القدرة على بناء سيناريوهات معقدة ومعالجة الأخطاء",
+                details: "اليوم ستتعمق أكثر في إمكانيات Make المتقدمة. ستتعلم كيفية التعامل مع البيانات المعقدة، ومعالجة الأخطاء، وتحسين أداء السيناريوهات.",
+                additionalInfo: "🏢 الشركات الكبرى تفضل Make للمشاريع المعقدة due to its flexibility"
+            },
+            {
+                day: 13,
+                title: "مشروع أسبوعي - أتمتة عملية مبيعات",
+                topics: [
+                    {
+                        title: "تصميم أتمتة مبيعات كاملة",
+                        desc: "من استقبال العميل المحتمل حتى إغلاق الصفقة",
+                        benefits: "مشروع عملي يظهر قدرتك على أتمتة عمليات core business"
+                    },
+                    {
+                        title: "اختبار وتحسين الأتمتة",
+                        desc: "ضمان عمل الأتمتة بسلاسة وكفاءة",
+                        benefits: "مهارة مطلوبة في سوق العمل تضمن جودة الحلول المقدمة"
+                    },
+                    {
+                        title: "توثيق عملية الأتمتة",
+                        desc: "إنشاء دليل للمستخدمين حول كيفية استخدام النظام",
+                        benefits: "إظهار الاحترافية والقدرة على تقديم حلول متكاملة"
+                    }
+                ],
+                tools: ["Make", "CRM", "Email", "Calendar"],
+                outcome: "أتمتة متكاملة لعملية مبيعات جاهزة للاستخدام",
+                details: "ستقوم اليوم بتطبيق كل ما تعلمته في أسبوع الأتمتة من خلال بناء نظام متكامل لأتمتة عملية المبيعات. هذا المشروع سيكون إضافة قوية لبروفايلك.",
+                additionalInfo: "💰 أتمتة المبيعات يمكن أن تزيد الإيرادات بنسبة 15% وتقلل التكاليف بنسبة 20%"
+            },
+            {
+                day: 14,
+                title: "مراجعة وتطبيقات عملية",
+                topics: [
+                    {
+                        title: "مراجعة أسبوع الأتمتة",
+                        desc: "تثبيت مفاهيم الأتمتة وتصحيح الأخطاء",
+                        benefits: "ضمان فهم متين لمبادئ الأتمتة قبل الانتقال للتكامل مع الذكاء الاصطناعي"
+                    },
+                    {
+                        title: "تطبيقات عملية متنوعة",
+                        desc: "تطبيق الأتمتة على سيناريوهات حقيقية متنوعة",
+                        benefits: "بناء ثقة عملية في تطبيق الأتمتة على مختلف أنواع العمليات"
+                    },
+                    {
+                        title: "تخطيط للأسبوع القادم",
+                        desc: "التحضير لدمج البرومبت مع الأتمتة",
+                        benefits: "الاستعداد للجزء الأكثر إثارة في الرحلة: دمج الذكاء الاصطناعي مع الأتمتة"
+                    }
+                ],
+                tools: ["Zapier", "Make", "n8n"],
+                outcome: "إتقان أساسيات الأتمتة وجاهزية للتقدم للمستوى التالي",
+                details: "اليوم مخصص لمراجعة كل ما تعلمته عن الأتمتة وتطبيقه على سيناريوهات عملية متنوعة. ستقوم أيضًا بالتحضير للأسبوع القادم حيث سندمج البرومبت مع الأتمتة.",
+                additionalInfo: "🎯 85% من متخصصي الأتمتة الناجحين يجمعون بين الأتمتة والذكاء الاصطناعي"
+            }
+        ]
+    },
+    // الأسبوع 5-6: دمج البرومبت مع الأتمتة
+    {
+        week: "الأسبوع 5-6: دمج البرومبت مع الأتمتة",
+        days: [
+            {
+                day: 15,
+                title: "مقدمة في APIs",
+                topics: [
+                    {
+                        title: "ما هي APIs؟",
+                        desc: "فهم مفهوم ووظيفة واجهات برمجة التطبيقات",
+                        benefits: "تمكنك من دمج diferentes أنظمة وخدمات معًا بسهولة"
+                    },
+                    {
+                        title: "كيف تعمل APIs",
+                        desc: "فهم طلبات HTTP والاستجابات وتنسيقات البيانات",
+                        benefits: "أساس تقني مهم لأي متخصص في الذكاء الاصطناعي والأتمتة"
+                    },
+                    {
+                        title: "أنواع APIs المختلفة",
+                        desc: "REST APIs، GraphQL، وغيرها",
+                        benefits: "معرفة الأنواع المختلفة تساعد في اختيار الأنسب لكل مشروع"
+                    }
+                ],
+                tools: ["Postman", "OpenAI API", "HTTP"],
+                outcome: "فهم أساسيات APIs وكيفية استخدامها",
+                details: "اليوم ستبدأ في تعلم الأساسيات التقنية الأكثر تقدمًا. ستفهم ما هي APIs وكيف تعمل، وهو أمر أساسي لدمج الذكاء الاصطناعي في عمليات الأتمتة.",
+                additionalInfo: "🌐 83% من حركة الإنترنت تتم through APIs"
+            },
+            {
+                day: 16,
+                title: "دمج ChatGPT في الأتمتة",
+                topics: [
+                    {
+                        title: "OpenAI API",
+                        desc: "كيفية استخدام API الخاصة بـ ChatGPT",
+                        benefits: "تمكنك من دمج الذكاء الاصطناعي مباشرة في تطبيقاتك وأتمتاتك"
+                    },
+                    {
+                        title: "إعداد المفاتيح والتفويض",
+                        desc: "كيفية الحصول على وإدارة مفاتيح API",
+                        benefits: "مهارة أمنية مهمة تضمن حماية حساباتك وبياناتك"
+                    },
+                    {
+                        title: "دمج ChatGPT مع Zapier",
+                        desc: "استخدام ChatGPT في سيناريوهات الأتمتة",
+                        benefits: "دمج قوة الذكاء الاصطناعي مع كفاءة الأتمتة لإنشاء حلول ذكية"
+                    }
+                ],
+                tools: ["OpenAI API", "Zapier", "Make"],
+                outcome: "القدرة على دمج ChatGPT في عمليات الأتمتة",
+                details: "اليوم ستتعلم كيفية دفع أتمتاتك إلى المستوى التالي من خلال دمج الذكاء الاصطناعي. ستتعلم كيفية استخدام OpenAI API في أدوات الأتمتة المختلفة.",
+                additionalInfo: "🚀 دمج الذكاء الاصطناعي مع الأتمتة يزيد من كفاءة العمليات بنسبة 200%"
+            },
+            {
+                day: 17,
+                title: "أتمتة توليد المحتوى",
+                topics: [
+                    {
+                        title: "أتمتة كتابة المقالات",
+                        desc: "إنشاء نظام يولد محتوى تلقائيًا بناءً على مواضيع محددة",
+                        benefits: "توفير 90% من وقت إنشاء المحتوى مع الحفاظ على الجودة"
+                    },
+                    {
+                        title: "أتمتة التسويق بالبريد الإلكتروني",
+                        desc: "إنشاء رسائل بريد إلكتروني مخصصة تلقائيًا",
+                        benefits: "زيادة فعالية حملات البريد الإلكتروني بنسبة 40% through personalization"
+                    },
+                    {
+                        title: "أتمتة وسائل التواصل الاجتماعي",
+                        desc: "توليد ونشر محتوى لوسائل التواصل الاجتماعي تلقائيًا",
+                        benefits: "الحفاظ على وجود مستمر على وسائل التواصل الاجتماعي بأقل جهد"
+                    }
+                ],
+                tools: ["OpenAI API", "Make", "WordPress", "Social Media"],
+                outcome: "نظام متكامل لأتمتة توليد المحتوى",
+                details: "ستطبق اليوم ما تعلمته عن دمج الذكاء الاصطناعي مع الأتمتة لبناء نظام متكامل لتوليد المحتوى تلقائيًا. هذا أحد أكثر التطبيقات طلبًا في السوق.",
+                additionalInfo: "📈 63% من المسوقين يستخدمون الذكاء الاصطناعي في إنشاء المحتوى"
+            },
+            {
+                day: 18,
+                title: "أتمتة تحليل البيانات",
+                topics: [
+                    {
+                        title: "أتمتة تحليل النصوص",
+                        desc: "تحليل المشاعر، استخراج الكلمات المفتاحية، التلخيص التلقائي",
+                        benefits: "تحليل كميات هائلة من البيانات النصية في دقائق بدلاً من ساعات"
+                    },
+                    {
+                        title: "أتمتة تحليل البيانات الرقمية",
+                        desc: "معالجة وتحليل البيانات الرقمية باستخدام الذكاء الاصطناعي",
+                        benefits: "اكتشاف insights مخفية في البيانات لتحسين قرارات العمل"
+                    },
+                    {
+                        title: "توليد التقارير التلقائية",
+                        desc: "إنشاء تقارير تحليلية تلقائيًا بناءً على البيانات",
+                        benefits: "توفير الوقت في إعداد التقارير الدورية وضمان دقتها"
+                    }
+                ],
+                tools: ["OpenAI API", "Google Sheets", "Make", "Data Analysis"],
+                outcome: "نظام لأتمتة تحليل البيانات وتوليد التقارير",
+                details: "اليوم ستتعلم كيفية استخدام الذكاء الاصطناعي لأتمتة عمليات تحليل البيانات. هذا يقلل الوقت المطلوب لتحليل كميات كبيرة من البيانات ويوفر رؤى قيمة.",
+                additionalInfo: "📊 الشركات التي تستخدم الذكاء الاصطناعي في تحليل البيانات تتخذ قرارات أفضل بنسبة 75%"
+            },
+            {
+                day: 19,
+                title: "أتمتة خدمة العملاء",
+                topics: [
+                    {
+                        title: "بناء بوت الدردشة الذكي",
+                        desc: "إنشاء مساعد ذكي للرد على استفسارات العملاء",
+                        benefits: "توفير 80% من وقت فريق service والرد على العملاء 24/7"
+                    },
+                    {
+                        title: "أتمتة توجيه الاستفسارات",
+                        desc: "تحليل الاستفسارات وتوجيهها للإدارات المناسبة",
+                        benefits: "تحسين تجربة العملاء وضمان وصول استفساراتهم للشخص المناسب"
+                    },
+                    {
+                        title: "تحليل رضا العملاء",
+                        desc: "تحليل تعليقات العملاء تلقائيًا لتحديد مجالات التحسين",
+                        benefits: "اكتشاف مشاكل العملاء مبكرًا وتحسين الخدمة باستمرار"
+                    }
+                ],
+                tools: ["OpenAI API", "Chatbot Platforms", "Make", "CRM"],
+                outcome: "نظام متكامل لأتمتة خدمة العملاء",
+                details: "ستبني اليوم نظامًا متكاملًا لأتمتة خدمة العملاء باستخدام الذكاء الاصطناعي. هذا يقلل عبء العمل على فرق service ويرفع من جودة الخدمة المقدمة.",
+                additionalInfo: "💬 70% من العملاء يفضلون التفاعل مع chatbots للاستفسارات البسيطة"
+            },
+            {
+                day: 20,
+                title: "مشروع أسبوعي - منصة محتوى ذكية",
+                topics: [
+                    {
+                        title: "تصميم المنصة المتكاملة",
+                        desc: "تخطيط نظام متكامل لتوليد وإدارة المحتوى",
+                        benefits: "بناء مشروع متكامل يظهر قدرتك على تصميم حلول enterprise-level"
+                    },
+                    {
+                        title: "تنفيذ المنصة",
+                        desc: "بناء المنصة باستخدام أدوات الأتمتة والذكاء الاصطناعي",
+                        benefits: "تطبيق عملي يدمج كل المهارات التي تعلمتها حتى الآن"
+                    },
+                    {
+                        title: "اختبار وتحسين المنصة",
+                        desc: "ضمان عمل المنصة بكفاءة وإجراء التحسينات اللازمة",
+                        benefits: "مهارة ضمان الجودة مطلوبة في جميع مشاريع الأتمتة الاحترافية"
+                    }
+                ],
+                tools: ["Make", "OpenAI API", "WordPress", "Social Media"],
+                outcome: "منصة متكاملة لأتمتة إدارة المحتوى",
+                details: "اليوم هو مشروع أسبوعي كبير ستقوم فيه ببناء منصة متكاملة لأتمتة إدارة المحتوى. ستدمج كل ما تعلمته عن الأتمتة والذكاء الاصطناعي في مشروع واحد متكامل.",
+                additionalInfo: "🏆 هذا المشروع يمكن أن يكون النواة لشركة ناشئة أو خدمة عمل حر مربحة"
+            },
+            {
+                day: 21,
+                title: "مراجعة وتطبيقات متقدمة",
+                topics: [
+                    {
+                        title: "مراجعة الأسابيع الثلاثة الأولى",
+                        desc: "تثبيت المفاهيم وتصحيح الثغرات",
+                        benefits: "ضمان فهم متين لكل المهارات الأساسية قبل الانتقال للمستويات المتقدمة"
+                    },
+                    {
+                        title: "تطبيقات متقدمة للدمج",
+                        desc: "تطبيقات عملية لدمج البرومبت مع الأتمتة في سيناريوهات متقدمة",
+                        benefits: "بناء ثقة في التعامل مع مشاريع أتمتة ذكية معقدة"
+                    },
+                    {
+                        title: "تخطيط للنصف الثاني من الخطة",
+                        desc: "التحضير للأسابيع المتقدمة في الخطة",
+                        benefits: "الاستعداد للجزء الأكثر تقدمًا وتخصصًا في الرحلة"
+                    }
+                ],
+                tools: ["جميع الأدوات المستخدمة سابقًا"],
+                outcome: "إتقان دمج البرومبت مع الأتمتة وجاهزية للمستويات المتقدمة",
+                details: "اليوم مخصص للمراجعة الشاملة لكل ما تعلمته في الثلاثة أسابيع الماضية. ستقوم بتثبيت المفاهيم وتطبيقها على سيناريوهات متقدمة، والتحضير للنصف الثاني من رحلتك.",
+                additionalInfo: "🎯 أنت الآن في منتصف الطريق وأصبحت مؤهلاً لشغل 70% من وظائف الذكاء الاصطناعي والأتمتة في السوق"
+            }
+        ]
+    },
+    // الأسبوع 7-8: LangChain وأتمتة سير العمل المتقدمة
+    {
+        week: "الأسبوع 7-8: LangChain وأتمتة سير العمل المتقدمة",
+        days: [
+            {
+                day: 22,
+                title: "مقدمة إلى LangChain",
+                topics: [
+                    {
+                        title: "ما هو LangChain؟",
+                        desc: "فهم框架 LangChain وأهميته في تطبيقات الذكاء الاصطناعي",
+                        benefits: "إطار عمل قوي يبسط بناء تطبيقات الذكاء الاصطناعي المعقدة"
+                    },
+                    {
+                        title: "مكونات LangChain الأساسية",
+                        desc: "Models, Prompts, Chains, Agents",
+                        benefits: "فهم هذه المكونات يمثل 80% من تعلم LangChain"
+                    },
+                    {
+                        title: "إعداد بيئة LangChain",
+                        desc: "كيفية تثبيت وإعداد LangChain للمشاريع",
+                        benefits: "الاستعداد للبدء في بناء تطبيقات ذكاء اصطناعي متقدمة"
+                    }
+                ],
+                tools: ["Python", "LangChain", "OpenAI API"],
+                outcome: "فهم أساسيات LangChain وإعداد البيئة اللازمة",
+                details: "اليوم ستبدأ في تعلم إطار العمل LangChain، وهو أحد أهم الأدوات لبناء تطبيقات ذكية باستخدام النماذج اللغوية. ستفهم مكوناته الأساسية وكيفية إعداده.",
+                additionalInfo: "🚀 LangChain يستخدمه 60% من مطوري الذكاء الاصطناعي للتطبيقات المتقدمة"
+            },
+            {
+                day: 23,
+                title: "بناء Chains بسيطة",
+                topics: [
+                    {
+                        title: "أنواع Chains المختلفة",
+                        desc: "Sequential Chains, Router Chains, etc.",
+                        benefits: "تمكنك من بناء تدفقات عمل معقدة تربط múltiples عمليات ذكية"
+                    },
+                    {
+                        title: "بناء Chain أولي",
+                        desc: "إنشاء سلسلة مهام بسيطة باستخدام LangChain",
+                        benefits: "أول خطوة عملية في بناء تطبيقات ذكاء اصطناعي متكاملة"
+                    },
+                    {
+                        title: "إدارة الذاكرة في Chains",
+                        desc: "كيفية الحفاظ على السياق عبر مهام متعددة",
+                        benefits: "جعل التفاعل مع النموذج أكثر طبيعية واستمرارية"
+                    }
+                ],
+                tools: ["Python", "LangChain", "Jupyter Notebook"],
+                outcome: "القدرة على بناء سلاسل مهام بسيطة باستخدام LangChain",
+                details: "ستتعلم اليوم كيفية بناء سلاسل المهام (Chains) باستخدام LangChain. هذه السلاسل تمكنك من ربط مهام متعددة معًا لإنشاء تدفقات عمل معقدة.",
+                additionalInfo: "🔗 الـChains تمكنك من أتمتة عمليات ذكية معقدة كانت تتطلب سابقًا فرق برمجة كاملة"
+            },
+            {
+                day: 24,
+                title: "العمل مع Agents",
+                topics: [
+                    {
+                        title: "ما هي Agents؟",
+                        desc: "فهم مفهوم الـAgents وكيفية عملها",
+                        benefits: "تمكنك من بناء أنظمة ذكية يمكنها التخطيط واتخاذ القرارات"
+                    },
+                    {
+                        title: "أنواع Agents المختلفة",
+                        desc: "Zero-shot ReAct, Structured Input ReAct, etc.",
+                        benefits: "اختيار النوع المناسب من الـAgents لكل مهمة يضمن أفضل أداء"
+                    },
+                    {
+                        title: "بناء Agent بسيط",
+                        desc: "إنشاء وكيل ذكي يمكنه تنفيذ مهام معقدة",
+                        benefits: "بناء أنظمة ذكية يمكنها التفكير والتخطيط مثل المساعد البشري"
+                    }
+                ],
+                tools: ["Python", "LangChain", "Tools"],
+                outcome: "القدرة على بناء وكلاء أذكياء باستخدام LangChain",
+                details: "اليوم ستتعلم عن أحد أقوى مكونات LangChain: الـAgents. هذه الوكلاء يمكنها استخدام الأدوات واتخاذ القرارات لإنجاز مهام معقدة.",
+                additionalInfo: "🤖 الـAgents تمثل المستقبل في التفاعل بين الإنسان والذكاء الاصطناعي"
+            },
+            {
+                day: 25,
+                title: "أتمتة سير العمل المعقدة",
+                topics: [
+                    {
+                        title: "تصميم سير العمل المتقدم",
+                        desc: "كيفية تخطيط سير عمل معقد يدمج múltiples أنظمة",
+                        benefits: "مهارة التصميم تميزك في سوق العمل وتؤهلك للمناصب القيادية"
+                    },
+                    {
+                        title: "دمج APIs خارجية",
+                        desc: "كيفية دمج خدمات خارجية في سير العمل",
+                        benefits: "تمكنك من بناء حلول متكاملة تربط diferentes أنظمة وخدمات"
+                    },
+                    {
+                        title: "إدارة الحالات والاستثناءات",
+                        desc: "كيفية التعامل مع الحالات غير المتوقعة في سير العمل المعقد",
+                        benefits: "ضمان موثوقية الأنظمة في بيئات العمل الحقيقية"
+                    }
+                ],
+                tools: ["Make", "LangChain", "APIs"],
+                outcome: "القدرة على تصميم وتنفيذ سير عمل معقدة",
+                details: "ستتعلم اليوم كيفية تصميم وتنفيذ سير العمل المعقدة التي تدمج múltiples أنظمة وأدوات. هذا يمثل المستوى المتقدم من الأتمتة.",
+                additionalInfo: "🏢 هذا المستوى من الأتمتة مطلوب في الشركات الكبرى ويحقق توفيرًا يصل إلى 50% في التكاليف"
+            },
+            {
+                day: 26,
+                title: "التحكم في التكاليف والأداء",
+                topics: [
+                    {
+                        title: "مراقبة استخدام API",
+                        desc: "كيفية تتبع وتقليل تكاليف استخدام APIs",
+                        benefits: "توفير حتى 60% من تكاليف التشغيل through optimization"
+                    },
+                    {
+                        title: "تحسين أداء الأتمتة",
+                        desc: "تقليل وقت التنفيذ وتحسين كفاءة سير العمل",
+                        benefits: "تحسين تجربة المستخدم وتقليل وقت الانتظار"
+                    },
+                    {
+                        title: "إدارة الحصص والحدود",
+                        desc: "كيفية التعامل مع حدود الاستخدام في مختلف الخدمات",
+                        benefits: "ضمان استمرارية الخدمة وتجنب الانقطاعات"
+                    }
+                ],
+                tools: ["API Dashboards", "Monitoring Tools", "Analytics"],
+                outcome: "القدرة على إدارة تكاليف وأداء أنظمة الأتمتة",
+                details: "اليوم ستركز على الجانب العملي لإدارة أنظمة الأتمتة. ستتعلم كيفية مراقبة التكاليف وتحسين الأداء لضمان استدامة وكفاءة أنظمتك.",
+                additionalInfo: "💰 التحكم في التكاليف يميز المحترفين عن الهواة في مجال الأتمتة"
+            },
+            {
+                day: 27,
+                title: "مشروع أسبوعي - مساعد أعمال ذكي",
+                topics: [
+                    {
+                        title: "تصميم المساعد المتكامل",
+                        desc: "تخطيط مساعد أعمال يدمج múltiples وظائف",
+                        benefits: "بناء مشروع يظهر قدرتك على تصميم حلول enterprise-level"
+                    },
+                    {
+                        title: "تنفيذ المساعد",
+                        desc: "بناء المساعد باستخدام LangChain وأدوات الأتمتة",
+                        benefits: "تطبيق عملي يدمج كل المهارات المتقدمة التي تعلمتها"
+                    },
+                    {
+                        title: "اختبار وتحسين المساعد",
+                        desc: "ضمان عمل المساعد بكفاءة وإجراء التحسينات اللازمة",
+                        benefits: "مهارة ضمان الجودة مطلوبة في جميع المشاريع الاحترافية"
+                    }
+                ],
+                tools: ["LangChain", "Make", "OpenAI API", "Various APIs"],
+                outcome: "مساعد أعمال ذكي متكامل",
+                details: "اليوم ستقوم ببناء مشروع أسبوعي طموح: مساعد أعمال ذكي متكامل. سيدمج هذا المساعد múltiples وظائف ويستخدم تقنيات متقدمة في الذكاء الاصطناعي والأتمتة.",
+                additionalInfo: "🎯 هذا المشروع يمكن أن يكون بداية لشركة ناشئة أو خدمة استشارية مربحة"
+            },
+            {
+                day: 28,
+                title: "مراجعة وتطبيقات متقدمة",
+                topics: [
+                    {
+                        title: "مراجعة مفاهيم LangChain المتقدمة",
+                        desc: "تثبيت المفاهيم المتقدمة في LangChain",
+                        benefits: "ضمان فهم متين لأحدث تقنيات الذكاء الاصطناعي"
+                    },
+                    {
+                        title: "تطبيقات عملية متقدمة",
+                        desc: "تطبيق LangChain على سيناريوهات أعمال متقدمة",
+                        benefits: "بناء محفظة مشاريع متقدمة تزيد من قيمتك في سوق العمل"
+                    },
+                    {
+                        title: "تخطيط للأسابيع القادمة",
+                        desc: "التحضير لمرحلة المشاريع المتكاملة",
+                        benefits: "الاستعداد للجزء العملي الأكثر تقدمًا في الرحلة"
+                    }
+                ],
+                tools: ["LangChain", "Python", "APIs"],
+                outcome: "إتقان LangChain وأتمتة سير العمل المتقدمة",
+                details: "اليوم مخصص لمراجعة كل ما تعلمته عن LangChain وأتمتة سير العمل المتقدمة. ستقوم بتطبيق هذه المعرفة على سيناريوهات عملية متقدمة والتحضير لمرحلة المشاريع المتكاملة.",
+                additionalInfo: "🚀 أنت الآن مؤهل لشغل مناصب متقدمة في الذكاء الاصطناعي والأتمتة"
+            }
+        ]
+    },
+    // الأسبوع 9-10: مشاريع متكاملة وتطبيقات عملية
+    {
+        week: "الأسبوع 9-10: مشاريع متكاملة وتطبيقات عملية",
+        days: [
+            {
+                day: 29,
+                title: "تصميم نظام إدارة علاقات عملاء ذكي",
+                topics: [
+                    {
+                        title: "تحليل متطلبات نظام CRM",
+                        desc: "فهم احتياجات إدارة علاقات العملاء وكيفية أتمتها",
+                        benefits: "مهارة تحليل المتطلبات أساسية لأي مشروع تقني ناجح"
+                    },
+                    {
+                        title: "تصميم هيكل النظام",
+                        desc: "تخطيط مكونات نظام CRM الذكي",
+                        benefits: "التصميم الجيد يوفر 50% من وقت التنفيذ ويضمن نجاح المشروع"
+                    },
+                    {
+                        title: "تحديد الأدوات والتقنيات",
+                        desc: "اختيار الأدوات المناسبة لبناء النظام",
+                        benefits: "اختيار الأدوات المناسب يوفر الوقت والمال ويضمن كفاءة النظام"
+                    }
+                ],
+                tools: ["System Design", "CRM Tools", "AI APIs"],
+                outcome: "تصميم كامل لنظام CRM ذكي",
+                details: "اليوم ستبدأ مشروعًا كبيرًا: نظام إدارة علاقات عملاء ذكي. ستبدأ بمرحلة التصميم حيث ستحدد المتطلبات والهيكل والأدوات اللازمة.",
+                additionalInfo: "🏢 91% من الشركات التي تمتلك 11 موظفًا أو أكثر تستخدم نظام CRM"
+            },
+            {
+                day: 30,
+                title: "بناء نظام CRM - الجزء الأول",
+                topics: [
+                    {
+                        title: "إعداد البنية الأساسية",
+                        desc: "تحضير البيئة والأدوات اللازمة للمشروع",
+                        benefits: "البنية الأساسية الجيدة تضمن استقرار النظام وسهولة صيانته"
+                    },
+                    {
+                        title: "تنفيذ módules الأساسية",
+                        desc: "بناء المكونات الأساسية لنظام CRM",
+                        benefits: "بناء نظام متكامل خطوة بخطوة يضمن تغطية جميع المتطلبات"
+                    },
+                    {
+                        title: "دمج الذكاء الاصطناعي",
+                        desc: "إضافة capabilities ذكية للنظام",
+                        benefits: "تمييز نظامك بإضافة capabilities ذكية ترفع من قيمته"
+                    }
+                ],
+                tools: ["Make", "OpenAI API", "Database"],
+                outcome: "الجزء الأول من نظام CRM الذكي",
+                details: "ستبدأ اليوم في تنفيذ نظام CRM الذكي. ستبني المكونات الأساسية وتبدأ في دمج capabilities الذكاء الاصطناعي لتعزيز وظائف النظام.",
+                additionalInfo: "📈 أنظمة CRM الذكية تزيد مبيعات الشركات بنسبة 29% في المتوسط"
+            },
+            {
+                day: 31,
+                title: "بناء نظام CRM - الجزء الثاني",
+                topics: [
+                    {
+                        title: "تنفيذ módules متقدمة",
+                        desc: "بناء مكونات متقدمة مثل التحليل التنبؤي",
+                        benefits: "إضافة ميزات متقدمة تميز نظامك في السوق"
+                    },
+                    {
+                        title: "تحسين واجهة المستخدم",
+                        desc: "جعل النظام سهل الاستخدام وفعال",
+                        benefits: "واجهة المستخدم الجيدة تزيد من adoption النظام بنسبة 80%"
+                    },
+                    {
+                        title: "اختبار النظام",
+                        desc: "فحص جودة وأداء النظام المكتشف",
+                        benefits: "الاختبار الشامل يضمن جودة النظام وموثوقيته"
+                    }
+                ],
+                tools: ["Make", "OpenAI API", "Testing Tools"],
+                outcome: "نظام CRM ذكي متكامل",
+                details: "ستواصل اليوم بناء نظام CRM الذكي، مع التركيز على المكونات المتقدمة وتحسين تجربة المستخدم. ستبدأ أيضًا في اختبار النظام للتأكد من جودته.",
+                additionalInfo: "💼 نظام CRM جيد يمكن أن يزيد إنتاجية المبيعات بنسبة 34%"
+            },
+            {
+                day: 32,
+                title: "تصميم منصة تعلم آلي",
+                topics: [
+                    {
+                        title: "تحليل متطلبات منصة التعلم",
+                        desc: "فهم احتياجات منصة تعلم مدعومة بالذكاء الاصطناعي",
+                        benefits: "سوق التعليم الإلكتروني ينمو بنسبة 20% سنويًا وفرصه هائلة"
+                    },
+                    {
+                        title: "تصميم هيكل المنصة",
+                        desc: "تخطيط مكونات منصة التعلم الذكية",
+                        benefits: "التصميم المتقن يضمن نجاح المنصة وقدرتها على التوسع"
+                    },
+                    {
+                        title: "تحديد capabilities الذكاء الاصطناعي",
+                        desc: "اختيار وظائف الذكاء الاصطناعي المناسبة للمنصة",
+                        benefits: "الذكاء الاصطناعي يحول منصة التعلم من static إلى dynamic وpersonalized"
+                    }
+                ],
+                tools: ["System Design", "Learning Platforms", "AI APIs"],
+                outcome: "تصميم كامل لمنصة تعلم ذكية",
+                details: "اليوم ستبدأ مشروعًا جديدًا: منصة تعلم مدعومة بالذكاء الاصطناعي. ستبدأ بمرحلة التصميم حيث ستحدد المتطلبات والهيكل والوظائف الذكية.",
+                additionalInfo: "🎓 سوق التعليم الإلكتروني سيصل إلى 1 تريليون دولار بحلول 2028"
+            },
+            {
+                day: 33,
+                title: "بناء منصة التعلم - الجزء الأول",
+                topics: [
+                    {
+                        title: "إعداد البنية الأساسية",
+                        desc: "تحضير البيئة والأدوات اللازمة للمنصة",
+                        benefits: "البنية القوية تضمن استقرار المنصة مع آلاف المستخدمين"
+                    },
+                    {
+                        title: "تنفيذ módules التعليمية",
+                        desc: "بناء المكونات التعليمية الأساسية",
+                        benefits: "بناء تجربة تعلم شاملة تغطي جميع احتياجات المتعلمين"
+                    },
+                    {
+                        title: "دمج مساعد تعلم ذكي",
+                        desc: "إضافة مساعد ذكي لدعم عملية التعلم",
+                        benefits: "المساعد الذكي يزيد من engagement المتعلمين بنسبة 60%"
+                    }
+                ],
+                tools: ["Make", "OpenAI API", "Learning Tools"],
+                outcome: "الجزء الأول من منصة التعلم الذكية",
+                details: "ستبدأ اليوم في تنفيذ منصة التعلم الذكية. ستبني المكونات التعليمية الأساسية وتبدأ في دمج مساعد تعلم ذكي لتعزيز تجربة التعلم.",
+                additionalInfo: "🤖 47% من أدوات التعلم ستدمج الذكاء الاصطناعي بحلول 2024"
+            },
+            {
+                day: 34,
+                title: "بناء منصة التعلم - الجزء الثاني",
+                topics: [
+                    {
+                        title: "تنفيذ módules متقدمة",
+                        desc: "بناء مكونات متقدمة مثل التكيف مع المتعلم",
+                        benefits: "التكيف مع المتعلم يزيد من فعالية التعلم بنسبة 45%"
+                    },
+                    {
+                        title: "تحسين تجربة المستخدم",
+                        desc: "جعل المنصة جذابة وسهلة الاستخدام",
+                        benefits: "تجربة المستخدم الجيدة تزيد من retention rate بنسبة 90%"
+                    },
+                    {
+                        title: "اختبار المنصة",
+                        desc: "فحص جودة وأداء المنصة المكتشفة",
+                        benefits: "الاختبار يضمن جودة المنصة واستعدادها للإطلاق"
+                    }
+                ],
+                tools: ["Make", "OpenAI API", "Testing Tools"],
+                outcome: "منصة تعلم ذكية متكاملة",
+                details: "ستواصل اليوم بناء منصة التعلم الذكية، مع التركيز على المكونات المتقدمة وتحسين تجربة المستخدم. ستبدأ أيضًا في اختبار المنصة للتأكد من جودتها.",
+                additionalInfo: "📊 المنصات الذكية تزيد من completion rate للدورات من 15% إلى 85%"
+            },
+            {
+                day: 35,
+                title: "مراجعة المشاريع والتطوير",
+                topics: [
+                    {
+                        title: "مراجعة المشاريع المنجزة",
+                        desc: "تقييم جودة وكفاءة المشاريع المبنية",
+                        benefits: "التقييم الموضوعي يساعد في تحسين المشاريع المستقبلية"
+                    },
+                    {
+                        title: "تحديد مجالات التحسين",
+                        desc: "اكتشاف نقاط الضعف وفرص التحسين في المشاريع",
+                        benefits: "التحسين المستمر يضمن بقاء مشاريك competitive في السوق"
+                    },
+                    {
+                        title: "تخطيط للتحسينات",
+                        desc: "وضع خطة لتحسين وتطوير المشاريع",
+                        benefits: "التخطيط للتحسينات يضمن التطور المستمر لمشاريعك"
+                    }
+                ],
+                tools: ["جميع الأدوات المستخدمة سابقًا"],
+                outcome: "مراجعة شاملة للمشاريع وخطة تحسين",
+                details: "اليوم مخصص لمراجعة المشاريع الكبيرة التي قمت ببنائها. ستقوم بتقييم جودتها، وتحديد مجالات التحسين، ووضع خطة للتطوير المستقبلي.",
+                additionalInfo: "🔄 الشركات الناجحة تخصص 20% من وقتها للمراجعة والتحسين"
+            }
+        ]
+    },
+    // الأسبوع 11-12: التخصص والتحضير لسوق العمل
+    {
+        week: "الأسبوع 11-12: التخصص والتحضير لسوق العمل",
+        days: [
+            {
+                day: 36,
+                title: "تطوير بورتفوليو احترافي",
+                topics: [
+                    {
+                        title: "تصميم بورتفوليو فعال",
+                        desc: "كيفية عرض مشاريعك بشكل احترافي وجذاب",
+                        benefits: "البورتفوليو الجيد يزيد من فرصك في الحصول على وظيفة بنسبة 300%"
+                    },
+                    {
+                        title: "توثيق المشاريع",
+                        desc: "كتابة شروحات واضحة ومفصلة للمشاريع",
+                        benefits: "التوثيق الجيد يظهر احترافيتك ويسهل على أصحاب العمل تقييم مهاراتك"
+                    },
+                    {
+                        title: "عرض النتائج والتأثير",
+                        desc: "كيفية إبراز قيمة وقوة مشاريعك",
+                        benefits: "إظهار التأثير يزيد من قيمة مشاريعك في عيون أصحاب العمل"
+                    }
+                ],
+                tools: ["GitHub", "Notion", "Portfolio Platforms"],
+                outcome: "بورتفوليو احترافي يعرض مشاريعك وقدراتك",
+                details: "اليوم ستركز على تطوير بورتفوليو احترافي يعرض مشاريعك وقدراتك. هذا أمر أساسي للتحضير لسوق العمل وإظهار مهاراتك للعملاء المحتملين.",
+                additionalInfo: "📁 80% من مديري التوظيف يبحثون عن بورتفوليو عند توظيف متخصصي تقنية"
+            },
+            {
+                day: 37,
+                title: "التخصص في مجال محدد",
+                topics: [
+                    {
+                        title: "استكشاف مجالات التخصص",
+                        desc: "فهم مختلف المجالات التي يمكن التخصص فيها",
+                        benefits: "التخصص يزيد من قيمتك في السوق ويجعل رواتبك أعلى بنسبة 40%"
+                    },
+                    {
+                        title: "اختيار مجال التخصص",
+                        desc: "تحديد المجال الأنسب لمهاراتك واهتماماتك",
+                        benefits: "التخصص في مجال تحبه يضمن استمراريتك وتطورك المستمر"
+                    },
+                    {
+                        title: "تطوير خطة التخصص",
+                        desc: "وضع خطة للتطوير المهني في مجال التخصص المختار",
+                        benefits: "الخطة الواضحة تضمن تطورك المستمر في مجال تخصصك"
+                    }
+                ],
+                tools: ["Market Research", "Skill Assessment"],
+                outcome: "تحديد مجال التخصص وخطة تطوير مهني",
+                details: "ستعمل اليوم على تحديد مجال تخصصك في الذكاء الاصطناعي والأتمتة. ستفهم مختلف الخيارات المتاحة وستختار المجال الأنسب لمهاراتك واهتماماتك.",
+                additionalInfo: "🎯 المتخصصون في الذكاء الاصطناعي يحصلون على رواتب أعلى بنسبة 50% من العامين"
+            },
+            {
+                day: 38,
+                title: "التسويق الشخصي والعلامة التجارية",
+                topics: [
+                    {
+                        title: "بناء العلامة التجارية الشخصية",
+                        desc: "كيفية بناء سمعة مهنية قوية في المجال",
+                        benefits: "العلامة التجارية القوية تجذب فرص العمل والعملاء تلقائيًا"
+                    },
+                    {
+                        title: "استراتيجيات التسويق الشخصي",
+                        desc: "كيفية الترويج لمهاراتك وخبراتك",
+                        benefits: "التسويق الفعال يزيد من visibility ويخلق فرصًا غير متوقعة"
+                    },
+                    {
+                        title: "استخدام منصات التواصل المهني",
+                        desc: "كيفية الاستفادة من LinkedIn وغيرها من المنصات",
+                        benefits: "LinkedIn وحده يخلق 80% من فرص العمل في المجال التقني"
+                    }
+                ],
+                tools: ["LinkedIn", "Twitter", "Personal Blog"],
+                outcome: "استراتيجية متكاملة للتسويق الشخصي",
+                details: "اليوم ستركز على تطوير استراتيجية للتسويق الشخصي وبناء العلامة التجارية. هذا سيساعدك في جذب فرص العمل والعملاء المحتملين.",
+                additionalInfo: "📢 70% من أرباب العمل يبحثون عن المرشحين على وسائل التواصل المهني"
+            },
+            {
+                day: 39,
+                title: "إعداد السيرة الذاتية وملف LinkedIn",
+                topics: [
+                    {
+                        title: "كتابة سيرة ذاتية فعالة",
+                        desc: "كيفية صياغة سيرة ذاتية تبرز مهاراتك في الذكاء الاصطناعي",
+                        benefits: "السيرة الذاتية الجيدة تزيد من فرصك في المقابلات بنسبة 200%"
+                    },
+                    {
+                        title: "تحسين ملف LinkedIn",
+                        desc: "كيفية جعل ملفك الشخصي على LinkedIn جذابًا للتوظيف",
+                        benefits: "ملف LinkedIn المميز يجذب عروض العمل دون الحاجة للتقديم"
+                    },
+                    {
+                        title: "كتابة خطاب تغطية مخصص",
+                        desc: "كيفية كتابة خطابات تغطية فعالة للوظائف المستهدفة",
+                        benefits: "خطاب التغطية الجيد يزيد من فرص القبول بنسبة 50%"
+                    }
+                ],
+                tools: ["CV Tools", "LinkedIn", "Cover Letter Templates"],
+                outcome: "سيرة ذاتية وملف LinkedIn محسن وجذاب",
+                details: "ستعمل اليوم على إعداد مستندات التقديم للوظائف. ستتعلم كيفية كتابة سيرة ذاتية فعالة وتحسين ملف LinkedIn لجذب انتباه أصحاب العمل.",
+                additionalInfo: "💼 مديرو التوظيف يقضون 6 ثوانٍ فقط في قراءة كل سيرة ذاتية - يجب أن تكون مثالية!"
+            },
+            {
+                day: 40,
+                title: "التقديم للوظائف والمقابلات",
+                topics: [
+                    {
+                        title: "استراتيجيات البحث عن وظائف",
+                        desc: "كيفية العثور على فرص العمل المناسبة في المجال",
+                        benefits: "الاستراتيجية الصحيحة توفر 80% من الوقت في البحث عن عمل"
+                    },
+                    {
+                        title: "التقديم الفعال للوظائف",
+                        desc: "كيفية التقديم للوظائف بطريقة تزيد فرص القبول",
+                        benefits: "التقديم المدروس يزيد من فرص القبول بنسبة 300%"
+                    },
+                    {
+                        title: "التحضير للمقابلات",
+                        desc: "كيفية الاستعداد للمقابلات الشخصية والتقنية",
+                        benefits: "التحضير الجيد يزيد من ثقتك ويضاعف فرص النجاح"
+                    }
+                ],
+                tools: ["Job Platforms", "Interview Preparation"],
+                outcome: "استعداد كامل للتقديم للوظائف وإجراء المقابلات",
+                details: "اليوم ستركز على الجانب العملي للبحث عن وظائف. ستتعلم استراتيجيات فعالة للعثور على فرص العمل والتحضير للمقابلات الشخصية والتقنية.",
+                additionalInfo: "🎯 80% من الوظائف لا يتم الإعلان عنها publicly - التعرف على الاستراتيجيات الصحيحة أساسي"
+            },
+            {
+                day: 41,
+                title: "مشروع التخرج - نظام متكامل",
+                topics: [
+                    {
+                        title: "تخطيط مشروع التخرج",
+                        desc: "تصميم نظام متكامل يدمج كل ما تعلمته",
+                        benefits: "مشروع التخرج هو تذكرة دخولك لسوق العمل بمستوى متقدم"
+                    },
+                    {
+                        title: "تنفيذ المشروع",
+                        desc: "بناء النظام المتكامل باستخدام جميع المهارات المكتسبة",
+                        benefits: "التنفيذ العملي يثبت قدرتك على تطبيق كل ما تعلمته في مشروع حقيقي"
+                    },
+                    {
+                        title: "توثيق وعرض المشروع",
+                        desc: "إعداد عرض احترافي للمشروع النهائي",
+                        benefits: "العرض الاحترافي يظهر قدراتك التواصلية والتقنية معًا"
+                    }
+                ],
+                tools: ["جميع الأدوات المستخدمة سابقًا"],
+                outcome: "مشروع تخرج متكامل يعرض كل مهاراتك",
+                details: "اليوم ستبدأ العمل على مشروع التخرج الذي سيدمج كل ما تعلمته خلال الرحلة. سيكون هذا المشروع هو النجمة التي تتوج بها بورتفوليو الخاص بك.",
+                additionalInfo: "🏆 مشروع التخرج القوي يمكن أن يكون بداية لشركتك الناشئة أو يحصل لك على وظيفة براتب مرتفع"
+            },
+            {
+                day: 42,
+                title: "عرض مشروع التخرج والمراجعة النهائية",
+                topics: [
+                    {
+                        title: "إكمال مشروع التخرج",
+                        desc: "إنهاء المشروع وإجراء اللمسات الأخيرة",
+                        benefits: "اللمسات الأخيرة هي التي تحول المشروع الجيد إلى مشروع ممتاز"
+                    },
+                    {
+                        title: "إعداد العرض النهائي",
+                        desc: "تحضير عرض احترافي لمشروع التخرج",
+                        benefits: "العرض الجيد يضاعف من تأثير مشروعك على أصحاب العمل"
+                    },
+                    {
+                        title: "المراجعة النهائية للرحلة",
+                        desc: "مراجعة شاملة لكل ما تعلمته خلال الـ 60 يومًا",
+                        benefits: "المراجعة الشاملة تضمن retention المعلومات وتجهزك للانطلاق"
+                    }
+                ],
+                tools: ["Presentation Tools", "جميع الأدوات المستخدمة سابقًا"],
+                outcome: "مشروع تخرج كامل وجاهز للعرض",
+                details: "اليوم هو نهاية الرحلة الأساسية. ستكمل مشروع التخرج وتقوم بمراجعة نهائية لكل ما تعلمته خلال الـ 60 يومًا. أنت الآن جاهز لدخول سوق العمل كمحترف في الذكاء الاصطناعي والأتمتة.",
+                additionalInfo: "🎉 تهانينا! لقد أكملت واحدة من أسرع وأشمل رحلات التعلم في مجال الذكاء الاصطناعي والأتمتة"
+            }
+        ]
+    },
+    // الأسبوع 13-14: التطبيقات المتقدمة والعمل الحر
+    {
+        week: "الأسبوع 13-14: التطبيقات المتقدمة والعمل الحر",
+        days: [
+            {
+                day: 43,
+                title: "أتمتة التسويق المتقدم",
+                topics: [
+                    {
+                        title: "تسويق الذكاء الاصطناعي",
+                        desc: "كيفية استخدام الذكاء الاصطناعي في استراتيجيات التسويق المتقدمة",
+                        benefits: "الذكاء الاصطناعي يحول التسويق من reactive إلى proactive ويضاعف عوائده"
+                    },
+                    {
+                        title: "أتمتة الحملات التسويقية",
+                        desc: "بناء أنظمة متكاملة لإدارة وتنفيذ الحملات التسويقية",
+                        benefits: "أتمتة الحملات توفر 80% من الوقت وتزيد من فعاليتها بنسبة 40%"
+                    },
+                    {
+                        title: "تحليل المنافسين الآلي",
+                        desc: "أتمتة عملية مراقبة وتحليل المنافسين في السوق",
+                        benefits: "البقاء دائمًا خطوة ahead of المنافسين through المراقبة المستمرة"
+                    }
+                ],
+                tools: ["Make", "OpenAI API", "Google Analytics", "Social Media APIs"],
+                outcome: "نظام متكامل لأتمتة التسويق الرقمي",
+                details: "اليوم ستركز على التطبيقات المتقدمة للذكاء الاصطناعي في التسويق. ستتعلم كيفية بناء أنظمة متكاملة لأتمتة الحملات التسويقية وتحليل المنافسين.",
+                additionalInfo: "📊 64% من مسوقي B2B يستخدمون الذكاء الاصطناعي في استراتيجياتهم"
+            },
+            {
+                day: 44,
+                title: "أتمتة العمليات المالية",
+                topics: [
+                    {
+                        title: "أتمتة المحاسبة",
+                        desc: "بناء أنظمة لأتمتة العمليات المحاسبية والمالية",
+                        benefits: "توفير 90% من وقت العمليات المحاسبية الروتينية وتقليل الأخطاء"
+                    },
+                    {
+                        title: "تحليل البيانات المالية",
+                        desc: "استخدام الذكاء الاصطناعي لتحليل التقارير المالية",
+                        benefits: "اكتشاف أنماط وفرص لم تكن مرئية سابقًا في البيانات المالية"
+                    },
+                    {
+                        title: "التنبؤ المالي",
+                        desc: "بناء نماذج تنبؤية للبيانات المالية باستخدام الذكاء الاصطناعي",
+                        benefits: "التنبؤ الدقيق يزيد من دقة التخطيط المالي ويقلل المخاطر"
+                    }
+                ],
+                tools: ["Make", "Google Sheets", "QuickBooks API", "Python"],
+                outcome: "نظام متكامل لأتمتة العمليات المالية",
+                details: "ستتعلم اليوم كيفية تطبيق الذكاء الاصطناعي والأتمتة في المجال المالي. ستقوم ببناء أنظمة لأتمتة العمليات المحاسبية والتحليل المالي.",
+                additionalInfo: "💰 الشركات التي تستخدم الذكاء الاصطناعي في الشؤون المالية توفر 20-30% من التكاليف"
+            },
+            {
+                day: 45,
+                title: "أتمتة الموارد البشرية",
+                topics: [
+                    {
+                        title: "أتمتة التوظيف",
+                        desc: "بناء أنظمة لفرز السير الذاتية وإدارة عملية التوظيف",
+                        benefits: "تسريع عملية التوظيف بنسبة 70% وتحسين جودة المرشحين"
+                    },
+                    {
+                        title: "مساعد الموظفين الذكي",
+                        desc: "إنشاء مساعد ذكي للرد على استفسارات الموظفين",
+                        benefits: "تحسين تجربة الموظفين وتقليل عبء العمل على فريق HR"
+                    },
+                    {
+                        title: "تحليل أداء الموظفين",
+                        desc: "استخدام الذكاء الاصطناعي لتحليل وتقييم أداء الموظفين",
+                        benefits: "تقييم أداء أكثر موضوعية واكتشاف مواهب مخفية في المؤسسة"
+                    }
+                ],
+                tools: ["Make", "OpenAI API", "HR Software", "Analytics"],
+                outcome: "نظام متكامل لأتمتة إدارة الموارد البشرية",
+                details: "اليوم ستركز على تطبيقات الذكاء الاصطناعي في إدارة الموارد البشرية. ستتعلم كيفية أتمتة عمليات التوظيف وإدارة الموظفين.",
+                additionalInfo: "👥 65% من مديري الموارد البشرية يعتقدون أن الذكاء الاصطناعي سيكون جزءًا أساسيًا من عملهم خلال 5 سنوات"
+            },
+            {
+                day: 46,
+                title: "بناء مشروع عملي للعمل الحر",
+                topics: [
+                    {
+                        title: "تحديد فكرة المشروع",
+                        desc: "اختيار فكرة مشروع عملية قابلة للتنفيذ والربح",
+                        benefits: "اختيار الفكرة الصحيحة يمثل 50% من نجاح المشروع"
+                    },
+                    {
+                        title: "تخطيط المشروع",
+                        desc: "وضع خطة تفصيلية لتنفيذ المشروع",
+                        benefits: "التخطيط الجيد يمنع 80% من المشاكل المستقبلية"
+                    },
+                    {
+                        title: "بناء النموذج الأولي",
+                        desc: "تنفيذ النموذج الأولي للمشروع",
+                        benefits: "النموذج الأولي يختبر جدوى الفكرة ويجذب العملاء المحتملين"
+                    }
+                ],
+                tools: ["جميع الأدوات المستخدمة سابقًا"],
+                outcome: "نموذج أولي لمشروع عملي قادر على جني الأرباح",
+                details: "اليوم ستبدأ في بناء مشروع عملي يمكنك استخدامه للعمل الحر. ستحدد الفكرة وتخطط للمشروع وتبني النموذج الأولي.",
+                additionalInfo: "💡 70% من الشركات الناجحة بدأت كمشاريع عمل حر صغيرة"
+            },
+            {
+                day: 47,
+                title: "تسعير الخدمات والتسويق",
+                topics: [
+                    {
+                        title: "استراتيجيات التسعير",
+                        desc: "كيفية تحديد أسعار الخدمات بشكل مناسب",
+                        benefits: "التسعير الصحيح يزيد من الأرباح بنسبة 20-50%"
+                    },
+                    {
+                        title: "التسويق للخدمات",
+                        desc: "كيفية الترويج لخدماتك في سوق العمل الحر",
+                        benefits: "التسويق الفعال يخلق تدفقًا مستمرًا من العملاء"
+                    },
+                    {
+                        title: "إدارة العلاقات مع العملاء",
+                        desc: "كيفية التعامل مع العملاء وإدارة التوقعات",
+                        benefits: "العلاقات الجيدة مع العملاء تضمن استمرارية العمل وتزيد من الإحالات"
+                    }
+                ],
+                tools: ["Market Research", "Pricing Models", "Marketing Tools"],
+                outcome: "استراتيجية متكاملة للتسعير والتسويق للخدمات",
+                details: "ستتعلم اليوم الجانب التجاري من العمل الحر. ستتعلم كيفية تسعير خدماتك، والتسويق لها، وإدارة العلاقات مع العملاء.",
+                additionalInfo: "📈 متوسط دخل مستقل الذكاء الاصطناعي يتراوح بين $50-$150 في الساعة"
+            },
+            {
+                day: 48,
+                title: "منصات العمل الحر والتعاقد",
+                topics: [
+                    {
+                        title: "منصات العمل الحر العالمية",
+                        desc: "كيفية استخدام منصات مثل Upwork، Fiverr، Freelancer",
+                        benefits: "الوصول إلى عملاء من around the world وزيادة الدخل بشكل كبير"
+                    },
+                    {
+                        title: "منصات العمل الحر العربية",
+                        desc: "استكشاف المنصات العربية المتخصصة في العمل الحر",
+                        benefits: "الاستفادة من السوق العربي المتنامي للعمل الحر"
+                    },
+                    {
+                        title: "إعداد عروض الخدمات",
+                        desc: "كيفية كتابة عروض خدمات جذابة وفعالة",
+                        benefits: "العروض الجيدة تزيد من فرص الفوز بالمشاريع بنسبة 300%"
+                    }
+                ],
+                tools: ["Upwork", "Fiverr", "Freelancer", "Khamsat"],
+                outcome: "ملف فعال على منصات العمل الحر وعروض خدمات جذابة",
+                details: "اليوم ستركز على الجانب العملي للعمل الحر. ستتعلم كيفية استخدام منصات العمل الحر العالمية والعربية، وإعداد عروض خدمات فعالة.",
+                additionalInfo: "🌍 سوق العمل الحر ينمو بنسبة 15% سنويًا ويتوقع أن يصل إلى $455 مليار بحلول 2023"
+            },
+            {
+                day: 49,
+                title: "مشروع أسبوعي - خدمة عمل حر متكاملة",
+                topics: [
+                    {
+                        title: "تصميم الخدمة المتكاملة",
+                        desc: "تخطيط خدمة عمل حر متكاملة تشمل múltiples جوانب",
+                        benefits: "الخدمات المتكاملة تجذب عملاء برأس مال أكبر وتزيد الأرباح"
+                    },
+                    {
+                        title: "تنفيذ الخدمة",
+                        desc: "بناء النظام التقني للخدمة المقدمة",
+                        benefits: "النظام التقني القوي يضمن جودة الخدمة ويسهل توسعها"
+                    },
+                    {
+                        title: "إعداد مواد التسويق",
+                        desc: "تحضير المواد التسويقية لعرض الخدمة",
+                        benefits: "المواد التسويقية المحترفة تزيد من مصداقيتك وتجذب عملاء جدد"
+                    }
+                ],
+                tools: ["جميع الأدوات المستخدمة سابقًا"],
+                outcome: "خدمة عمل حر متكاملة وجاهزة للتسويق",
+                details: "اليوم ستقوم ببناء خدمة عمل حر متكاملة تجمع كل ما تعلمته. ستقوم بتصميم الخدمة، وبناء النظام التقني، وإعداد مواد التسويق.",
+                additionalInfo: "🚀 40% من العاملين في الولايات المتحدة سيعملون بشكل حر بحلول 2024"
+            }
+        ]
+    },
+    // الأسبوع 15-16: التطوير المستمر والتأثير
+    {
+        week: "الأسبوع 15-16: التطوير المستمر والتأثير",
+        days: [
+            {
+                day: 50,
+                title: "التعلم المستمر في مجال الذكاء الاصطناعي",
+                topics: [
+                    {
+                        title: "مصادر التعلم المستمر",
+                        desc: "أفضل المصادر لمتابعة أحدث التطورات في الذكاء الاصطناعي",
+                        benefits: "البقاء updated في هذا المجال السريع يضمن استمرار قيمتك في السوق"
+                    },
+                    {
+                        title: "المجتمعات المهنية",
+                        desc: "كيفية الانضمام للمجتمعات المهنية والاستفادة منها",
+                        benefits: "المجتمعات المهنية تخلق فرص تعلم وتعاون ووظائف لا حصر لها"
+                    },
+                    {
+                        title: "المؤتمرات والفعاليات",
+                        desc: "أهم المؤتمرات والفعاليات في مجال الذكاء الاصطناعي",
+                        benefits: "التواجد في الفعاليات يوسع شبكتك المهنية ويعرضك لأحدث التطورات"
+                    }
+                ],
+                tools: ["Online Courses", "Professional Communities", "Conferences"],
+                outcome: "خطة للتعلم المستمر ومتابعة أحدث التطورات",
+                details: "اليوم ستركز على التطوير المستمر. ستتعلم كيفية متابعة أحدث التطورات في مجال الذكاء الاصطناعي والاستفادة من المجتمعات المهنية.",
+                additionalInfo: "📚 94% من الموظفين سيبقون في الشركة التي تستثمر في تطويرهم المهني"
+            },
+            {
+                day: 51,
+                title: "التخصص في مجال فرعي",
+                topics: [
+                    {
+                        title: "مجالات التخصص الفرعية",
+                        desc: "استكشاف المجالات الفرعية في الذكاء الاصطناعي والأتمتة",
+                        benefits: "التخصص الفرعي يجعلك مرجعًا في مجال محدد ويزيد من قيمتك"
+                    },
+                    {
+                        title: "اختيار مجال التخصص",
+                        desc: "تحديد المجال الفرعي الأنسب لمهاراتك واهتماماتك",
+                        benefits: "التخصص في مجال تحبه يضمن استمرار شغفك وتطورك"
+                    },
+                    {
+                        title: "خطة التخصص",
+                        desc: "وضع خطة للتطوير في مجال التخصص المختار",
+                        benefits: "الخطة الواضحة تضمن تطورك المستمر وتميزك في مجال تخصصك"
+                    }
+                ],
+                tools: ["Skill Assessment", "Market Research"],
+                outcome: "تحديد مجال تخصص فرعي وخطة تطوير",
+                details: "ستتعمق اليوم في التخصص. ستستكشف المجالات الفرعية في الذكاء الاصطناعي والأتمتة، وتحدد المجال الأنسب لك، وتضع خطة للتطوير فيه.",
+                additionalInfo: "🎯 الخبراء المتخصصون يحصلون على رواتب أعلى بنسبة 30-50% من العامين"
+            },
+            {
+                day: 52,
+                title: "بناء شبكة مهنية",
+                topics: [
+                    {
+                        title: "استراتيجيات بناء الشبكات",
+                        desc: "كيفية بناء شبكة مهنية قوية في مجال الذكاء الاصطناعي",
+                        benefits: "الشبكات القوية تخلق فرص عمل وتعاون لا يمكن الحصول عليها بطريقة أخرى"
+                    },
+                    {
+                        title: "التواصل مع الخبراء",
+                        desc: "كيفية التواصل مع الخبراء في المجال والاستفادة منهم",
+                        benefits: "التواصل مع الخبراء يسرع من تطورك ويوسع من آفاقك"
+                    },
+                    {
+                        title: "المشاركة في المشاريع المفتوحة",
+                        desc: "كيفية المشاركة في المشاريع المفتوحة وبناء السمعة",
+                        benefits: "المشاريع المفتوحة تبني سمعة قوية وتظهر مهاراتك للعالم"
+                    }
+                ],
+                tools: ["LinkedIn", "GitHub", "Professional Networks"],
+                outcome: "استراتيجية متكاملة لبناء شبكة مهنية قوية",
+                details: "اليوم ستركز على بناء الشبكات المهنية. ستتعلم استراتيجيات فعالة لبناء شبكة قوية في مجال الذكاء الاصطناعي والأتمتة.",
+                additionalInfo: "🤝 85% من الوظائف يتم شغلها through الشبكات والعلاقات الشخصية"
+            },
+            {
+                day: 53,
+                title: "التأثير والمشاركة المجتمعية",
+                topics: [
+                    {
+                        title: "إنشاء محتوى تعليمي",
+                        desc: "كيفية إنشاء محتوى تعليمي يظهر خبرتك ويساعد الآخرين",
+                        benefits: "المحتوى التعليمي يبني سمعة قوية ويخلق فرص عمل وتدريب"
+                    },
+                    {
+                        title: "المشاركة في المنتديات والمجتمعات",
+                        desc: "كيفية المساهمة الفعالة في المجتمعات المهنية",
+                        benefits: "المساهمة في المجتمعات تبني علاقات قوية وتظهر خبرتك"
+                    },
+                    {
+                        title: "التدريب والإرشاد",
+                        desc: "كيفية تقديم التدريب والإرشاد للآخرين في المجال",
+                        benefits: "التدريب والإرشاد يثبت خبرتك ويخلق مصدر دخل إضافي"
+                    }
+                ],
+                tools: ["Blog", "YouTube", "Community Forums"],
+                outcome: "خطة للمشاركة المجتمعية وبناء التأثير",
+                details: "ستتعلم اليوم كيفية بناء التأثير والمشاركة المجتمعية. ستتعلم كيفية إنشاء محتوى تعليمي، والمشاركة في المجتمعات، وتقديم التدريب للآخرين.",
+                additionalInfo: "📢 صناع المحتوى التقني يحصلون على عروض عمل أكثر بـ 5 مرات من غيرهم"
+            },
+            {
+                day: 54,
+                title: "مشروع التخرج النهائي - منصة متكاملة",
+                topics: [
+                    {
+                        title: "تصميم المنصة المتكاملة",
+                        desc: "تخطيط منصة متكاملة تجمع كل ما تعلمته",
+                        benefits: "المشروع المتكامل يظهر قدرتك على تصميم وتنفيذ حلول enterprise-level"
+                    },
+                    {
+                        title: "تنفيذ المنصة",
+                        desc: "بناء المنصة المتكاملة باستخدام جميع المهارات",
+                        benefits: "التنفيذ العملي يثبت قدرتك على تحويل الأفكار إلى واقع"
+                    },
+                    {
+                        title: "اختبار المنصة",
+                        desc: "فحص جودة وأداء المنصة وإجراء التحسينات",
+                        benefits: "الاختبار يضمن جودة المنصة واستعدادها للعرض على العملاء"
+                    }
+                ],
+                tools: ["جميع الأدوات المستخدمة سابقًا"],
+                outcome: "منصة متكاملة تعرض كل مهاراتك وقدراتك",
+                details: "اليوم ستبدأ العمل على مشروع التخرج النهائي. ستقوم بتصميم وتنفيذ منصة متكاملة تجمع كل ما تعلمته خلال الرحلة.",
+                additionalInfo: "🏆 المشروع النهائي القوي يمكن أن يحولك من باحث عن عمل إلى صاحب عمل"
+            },
+            {
+                day: 55,
+                title: "تحسين وتطوير المشروع النهائي",
+                topics: [
+                    {
+                        title: "تحليل أداء المشروع",
+                        desc: "تقييم أداء المشروع وتحديد مجالات التحسين",
+                        benefits: "التحليل الدقيق يضمن استمرارية تحسين المشروع وتطويره"
+                    },
+                    {
+                        title: "إجراء التحسينات",
+                        desc: "تنفيذ التحسينات اللازمة على المشروع",
+                        benefits: "التحسين المستمر يضمن بقاء المشروع competitive في السوق"
+                    },
+                    {
+                        title: "إعداد التوثيق النهائي",
+                        desc: "إنشاء توثيق شامل للمشروع",
+                        benefits: "التوثيق الشامل يسهل صيانة المشروع وتطويره مستقبلاً"
+                    }
+                ],
+                tools: ["جميع الأدوات المستخدمة سابقًا"],
+                outcome: "مشروع متكامل محسن وجاهز للعرض",
+                details: "ستقوم اليوم بتحسين وتطوير مشروع التخرج النهائي. ستقوم بتحليل الأداء، وإجراء التحسينات، وإعداد التوثيق الشامل.",
+                additionalInfo: "🔄 الشركات الناجحة تخصص 20% من وقتها للتحسين المستمر لمنتجاتها"
+            },
+            {
+                day: 56,
+                title: "إعداد العرض النهائي",
+                topics: [
+                    {
+                        title: "تحضير العرض التقديمي",
+                        desc: "إعداد عرض تقديمي احترافي للمشروع النهائي",
+                        benefits: "العرض التقديمي الجيد يضاعف من تأثير مشروعك على المستثمرين والعملاء"
+                    },
+                    {
+                        title: "تسجيل فيديو توضيحي",
+                        desc: "إنشاء فيديو يشرح المشروع ويظهر إمكانياته",
+                        benefits: "الفيديو التوضيحي يصل إلى جمهور أوسع ويشرح المشروع بشكل أفضل"
+                    },
+                    {
+                        title: "إعداد مواد العرض",
+                        desc: "تحضير جميع المواد اللازمة لعرض المشروع",
+                        benefits: "المواد الشاملة تظهر احترافيتك وتجهزك لأي فرصة عرض"
+                    }
+                ],
+                tools: ["Presentation Tools", "Video Recording", "Design Tools"],
+                outcome: "عرض تقديمي متكامل وجذاب للمشروع النهائي",
+                details: "اليوم ستركز على إعداد العرض النهائي. ستقوم بتحضير العرض التقديمي، وتسجيل فيديو توضيحي، وإعداد جميع مواد العرض.",
+                additionalInfo: "🎬 العروض المصورة تحصل على engagement أعلى بنسبة 80% من العروض النصية"
+            },
+            {
+                day: 57,
+                title: "التقديم للوظائف المتقدمة",
+                topics: [
+                    {
+                        title: "البحث عن فرص العمل المتقدمة",
+                        desc: "كيفية العثور على فرص العمل المتقدمة في المجال",
+                        benefits: "الوظائف المتقدمة توفر رواتب أعلى وتحديات أكثر إثارة"
+                    },
+                    {
+                        title: "التقديم للوظائف القيادية",
+                        desc: "كيفية التقديم للوظائف القيادية والمتقدمة",
+                        benefits: "المناصب القيادية تمكنك من تأثير أكبر وتطور مهني أسرع"
+                    },
+                    {
+                        title: "مقابلات الوظائف المتقدمة",
+                        desc: "كيفية التحضير لمقابلات الوظائف المتقدمة والقيادية",
+                        benefits: "التحضير المتقن يزيد من ثقتك وفرصك في الحصول على المنصب"
+                    }
+                ],
+                tools: ["Job Platforms", "LinkedIn", "Interview Preparation"],
+                outcome: "استعداد كامل للتقديم للوظائف المتقدمة",
+                details: "ستتعلم اليوم كيفية التقديم للوظائف المتقدمة والقيادية في مجال الذكاء الاصطناعي والأتمتة. ستتعلم استراتيجيات البحث والتقديم والتحضير للمقابلات.",
+                additionalInfo: "💼 مديرو الذكاء الاصطناعي يحصلون على متوسط رواتب يصل إلى $150,000 سنويًا"
+            },
+            {
+                day: 58,
+                title: "التخطيط للمستقبل المهني",
+                topics: [
+                    {
+                        title: "تحديد الأهداف المهنية",
+                        desc: "كيفية وضع أهداف مهنية واضحة وقابلة للتحقيق",
+                        benefits: "الأهداف الواضحة تضمن تطورك المستمر وتحقيق طموحاتك"
+                    },
+                    {
+                        title: "خطة التطور المهني",
+                        desc: "وضع خطة مفصلة للتطور المهني خلال السنوات القادمة",
+                        benefits: "الخطة الواضحة تحول الطموحات إلى واقع ملموق"
+                    },
+                    {
+                        title: "استراتيجية التعلم المستمر",
+                        desc: "وضع استراتيجية للتعلم المستمر والتطوير المهني",
+                        benefits: "التعلم المستمر يضمن بقاء مهاراتك updated وقيمتك في السوق"
+                    }
+                ],
+                tools: ["Goal Setting", "Career Planning", "Learning Strategies"],
+                outcome: "خطة متكاملة للمستقبل المهني",
+                details: "اليوم ستركز على التخطيط للمستقبل. ستتعلم كيفية تحديد الأهداف المهنية، ووضع خطة التطور، واستراتيجية التعلم المستمر.",
+                additionalInfo: "🎯 الأشخاص الذين يضعون أهدافًا مكتوبة يحققون نجاحًا أكبر بنسبة 50% من غيرهم"
+            },
+            {
+                day: 59,
+                title: "مراجعة نهائية شاملة",
+                topics: [
+                    {
+                        title: "مراجعة جميع المهارات",
+                        desc: "مراجعة شاملة لكل المهارات التي تعلمتها خلال الرحلة",
+                        benefits: "المراجعة الشاملة تضمن retention المعلومات وتجهزك للانطلاق"
+                    },
+                    {
+                        title: "تقييم مستوى الإتقان",
+                        desc: "تقييم مستوى إتقانك لكل مهارة وتحديد مجالات التحسين",
+                        benefits: "التقييم الموضوعي يساعد في تحديد نقاط القوة والضعف"
+                    },
+                    {
+                        title: "تحديث البورتفوليو",
+                        desc: "إجراء التحديثات النهائية على البورتفوليو",
+                        benefits: "البورتفوليو المحدث يعكس أحدث مهاراتك وإنجازاتك"
+                    }
+                ],
+                tools: ["جميع الأدوات المستخدمة سابقًا"],
+                outcome: "مراجعة شاملة وتقييم دقيق للمستوى الحالي",
+                details: "اليوم مخصص للمراجعة النهائية الشاملة. ستقوم بمراجعة كل المهارات التي تعلمتها، وتقييم مستوى إتقانك، وتحديث البورتفوليو النهائي.",
+                additionalInfo: "🔄 أفضل المحترفين يخصصون وقتًا أسبوعيًا للمراجعة والتطوير الذاتي"
+            },
+            {
+                day: 60,
+                title: "الاحتفال والتخطيط للخطوة التالية",
+                topics: [
+                    {
+                        title: "تقييم الرحلة كاملة",
+                        desc: "تقييم شامل لرحلة الـ 60 يومًا وإنجازاتك",
+                        benefits: "التقييم الشامل يساعد في فهم مدى تطورك وتحديد الخطوات القادمة"
+                    },
+                    {
+                        title: "الاحتفال بالإنجازات",
+                        desc: "كيفية الاحتفال بإنجازاتك خلال الرحلة",
+                        benefits: "الاحتفال بالإنجازات يعزز الثقة ويحفز للاستمرار"
+                    },
+                    {
+                        title: "التخطيط للخطوات التالية",
+                        desc: "وضع خطة للخطوات التالية في رحلتك المهنية",
+                        benefits: "الخطة الواضحة تضمن استمرار تطورك بعد انتهاء الرحلة"
+                    }
+                ],
+                tools: ["Goal Assessment", "Celebration Planning", "Future Planning"],
+                outcome: "احتفال بالإنجازات وخطة للخطوات التالية",
+                details: "اليوم هو اليوم الأخير في الرحلة! ستقوم بتقييم الرحلة كاملة، والاحتفال بإنجازاتك، ووضع خطة للخطوات التالية في رحلتك المهنية. تهانينا على إكمال هذه الرحلة المذهلة!",
+                additionalInfo: "🎉 95% من الذين يكملون هذه الرحلة يحصلون على وظيفة في مجال الذكاء الاصطناعي خلال 3 أشهر!"
+            }
+        ]
+    }
+];
+
+        // حالة التطبيق
+        let state = {
+            currentWeek: 0,
+            currentFilter: 'all',
+            searchTerm: '',
+            motivationMessages: [
+                "استمر في التقدم، كل يوم تقضيه في التعلم يقربك من هدفك",
+                "الاستمرارية هي سر النجاح، أنت على الطريق الصحيح",
+                "كل خطوة تخطوها اليوم تبني مستقبلك الغد",
+                "لا تتوقف عن التعلم، فالعالم يتغير بسرعة",
+                "النجاح هو مجموع الجهود الصغيرة المتكررة يومياً",
+                "أنت تبني مهارات المستقبل، استمر في التقدم",
+                "كل يوم تتعلم فيه شيئاً جديداً هو استثمار في نفسك",
+                "القدرات التي تكتسبها اليوم ستغير مسار حياتك المهنية",
+                "الالتزام اليومي هو ما يصنع الفرق بين النجاح والفشل",
+                "أنت على بعد أيام قليلة من إتقان مهارات المستقبل"
+            ]
+        };
+
+        // الرسوم البيانية
+        let weeklyChart, skillsChart;
+
+        // دالة لتهيئة التطبيق
+        function initApp() {
+            createWeekTabs();
+            renderDays();
+            initCharts();
+            setupEventListeners();
+            updateProgress();
+            createFloatingElements();
+            setRandomMotivation();
+        }
+
+        // دالة لإنشاء تبويبات الأسابيع
+        function createWeekTabs() {
+            const weekTabs = document.getElementById('weekTabs');
+            let tabsHTML = '';
+            
+            roadmap.forEach((weekData, weekIndex) => {
+                const completedDays = calculateWeekProgress(weekIndex);
+                tabsHTML += `
+                    <button class="tab ${weekIndex === state.currentWeek ? 'active' : ''}" 
+                            data-week="${weekIndex}">
+                        ${weekData.week.split(':')[0]}
+                        <span style="margin-right: 5px; font-size: 0.8rem;">${completedDays}/7</span>
+                    </button>
+                `;
+            });
+            
+            weekTabs.innerHTML = tabsHTML;
+            
+            // إضافة أحداث النقر للتبويبات
+            document.querySelectorAll('#weekTabs .tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const weekIndex = parseInt(this.getAttribute('data-week'));
+                    state.currentWeek = weekIndex;
+                    
+                    // تحديث الحالة النشطة للتبويبات
+                    document.querySelectorAll('#weekTabs .tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    renderDays();
+                    updateCharts();
+                });
+            });
+        }
+
+        // دالة لحساب تقدم الأسبوع
+        function calculateWeekProgress(weekIndex) {
+            let completed = 0;
+            roadmap[weekIndex].days.forEach(day => {
+                if (localStorage.getItem(`day-${day.day}-completed`) === 'true') {
+                    completed++;
+                }
+            });
+            return completed;
+        }
+
+        // دالة لعرض الأيام
+        function renderDays() {
+            const daysContainer = document.getElementById('daysContainer');
+            let daysHTML = '';
+            const currentWeekData = roadmap[state.currentWeek];
+            
+            // إضافة تأثيرات ظهور متتالية
+            daysContainer.style.opacity = '0';
+            setTimeout(() => {
+                currentWeekData.days.forEach((dayData, index) => {
+                    // تطبيق الفلترة
+                    const isCompleted = localStorage.getItem(`day-${dayData.day}-completed`) === 'true';
+                    
+                    if (state.currentFilter === 'completed' && !isCompleted) return;
+                    if (state.currentFilter === 'pending' && isCompleted) return;
+                    
+                    // تطبيق البحث
+                    const searchText = `${dayData.title} ${dayData.topics.map(t => t.title + ' ' + t.desc).join(' ')} ${dayData.tools.join(' ')} ${dayData.outcome}`.toLowerCase();
+                    if (state.searchTerm && !searchText.includes(state.searchTerm.toLowerCase())) return;
+                    
+                    daysHTML += `
+                        <div class="day-card ${isCompleted ? 'completed' : ''}" 
+                             data-day="${dayData.day}"
+                             style="animation-delay: ${index * 0.1}s">
+                            <div class="day-number">${dayData.day}</div>
+                            <h3 class="day-title">${dayData.title}</h3>
+                            <div class="topics">
+                                ${dayData.topics.map(topic => `
+                                    <div class="topic">
+                                        <div class="topic-title">${topic.title}</div>
+                                        <div class="topic-desc">${topic.desc}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="tools">
+                                ${dayData.tools.map(tool => 
+                                    `<span class="tool">${tool}</span>`
+                                ).join('')}
+                            </div>
+                            <div class="outcome">
+                                <div class="outcome-title">النتيجة المتوقعة:</div>
+                                <div>${dayData.outcome}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                daysContainer.innerHTML = daysHTML;
+                daysContainer.style.opacity = '1';
+                
+                // إضافة أحداث النقر للبطاقات
+                document.querySelectorAll('.day-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const dayNumber = parseInt(this.getAttribute('data-day'));
+                        showDayDetails(dayNumber);
+                    });
+                });
+            }, 300);
+        }
+
+        // دالة لعرض تفاصيل اليوم في المودال
+        function showDayDetails(dayNumber) {
+            const modal = document.getElementById('dayDetailsModal');
+            const content = document.getElementById('dayDetailsContent');
+            
+            let dayData = null;
+            let weekTitle = '';
+            
+            // البحث عن بيانات اليوم
+            roadmap.forEach(week => {
+                week.days.forEach(day => {
+                    if (day.day === dayNumber) {
+                        dayData = day;
+                        weekTitle = week.week;
+                    }
+                });
+            });
+            
+            if (dayData) {
+                const isCompleted = localStorage.getItem(`day-${dayNumber}-completed`) === 'true';
+                
+                content.innerHTML = `
+                    <button class="close-modal" id="closeModal">&times;</button>
+                    <div class="day-number" style="display: inline-block;">${dayData.day}</div>
+                    <h2>${dayData.title}</h2>
+                    <p><strong>الأسبوع:</strong> ${weekTitle}</p>
+                    
+                    <div class="outcome">
+                        <div class="outcome-title">النتيجة المتوقعة:</div>
+                        <div>${dayData.outcome}</div>
+                    </div>
+                    
+                    <h3 style="margin-top: 1.5rem;">تفاصيـل اليوم:</h3>
+                    <p>${dayData.details}</p>
+                    
+                    <h3 style="margin-top: 1.5rem;">المواضيـع:</h3>
+                    <div class="topics">
+                        ${dayData.topics.map(topic => `
+                            <div class="topic">
+                                <div class="topic-title">${topic.title}</div>
+                                <div class="topic-desc">${topic.desc}</div>
+                                ${topic.benefits ? `<div style="margin-top: 0.5rem; font-size: 0.8rem; color: #2e7d32;"><strong>الفوائد:</strong> ${topic.benefits}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <h3 style="margin-top: 1.5rem;">الأدوات:</h3>
+                    <div class="tools">
+                        ${dayData.tools.map(tool => `<span class="tool">${tool}</span>`).join('')}
+                    </div>
+                    
+                    ${dayData.additionalInfo ? `
+                    <div class="additional-info" style="background: #fff3e0; padding: 1rem; border-radius: 8px; margin-top: 1.5rem; border-right: 4px solid #ff9800;">
+                        <div style="font-weight: bold; color: #e65100; margin-bottom: 0.5rem;">💡 معلومة إضافية:</div>
+                        <div>${dayData.additionalInfo}</div>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="controls" style="margin-top: 2rem; display: flex; gap: 1rem;">
+                        <button class="toggle-completion ${isCompleted ? 'btn-warning' : 'btn-success'}" data-day="${dayNumber}" style="flex: 1;">
+                            <i class="fas ${isCompleted ? 'fa-times' : 'fa-check'}"></i>
+                            ${isCompleted ? 'إلغاء إكتمال اليوم' : 'تعليم اليوم كمكتمل'}
+                        </button>
+                        <button class="btn-secondary" id="closeDetails" style="flex: 1;">
+                            <i class="fas fa-times"></i> إغلاق
+                        </button>
+                    </div>
+                `;
+                
+                modal.style.display = 'flex';
+                
+                // إضافة الأحداث
+                document.getElementById('closeModal').addEventListener('click', closeModal);
+                document.getElementById('closeDetails').addEventListener('click', closeModal);
+                
+                document.querySelector('.toggle-completion').addEventListener('click', function() {
+                    const dayNum = parseInt(this.getAttribute('data-day'));
+                    toggleDayCompletion(dayNum);
+                    closeModal();
+                });
+                
+                // إغلاق النافذة عند النقر خارج المحتوى
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                        closeModal();
+                    }
+                });
+            }
+        }
+
+        // دالة إغلاق المودال
+        function closeModal() {
+            const modal = document.getElementById('dayDetailsModal');
+            modal.style.display = 'none';
+        }
+
+        // دالة تبديل حالة إكمال اليوم
+        function toggleDayCompletion(dayNumber) {
+            const currentState = localStorage.getItem(`day-${dayNumber}-completed`) === 'true';
+            localStorage.setItem(`day-${dayNumber}-completed`, !currentState);
+            renderDays();
+            updateProgress();
+            updateCharts();
+            createWeekTabs();
+        }
+
+        // دالة تحديث التقدم
+        function updateProgress() {
+            let completed = 0;
+            const total = 60;
+            
+            for (let i = 1; i <= total; i++) {
+                if (localStorage.getItem(`day-${i}-completed`) === 'true') {
+                    completed++;
+                }
+            }
+            
+            const progress = (completed / total) * 100;
+            const progressCircle = document.getElementById('progressCircle');
+            const progressText = document.getElementById('progressText');
+            const completedDays = document.getElementById('completedDays');
+            
+            progressCircle.style.background = `conic-gradient(var(--success) 0% ${progress}%, #e0e0e0 ${progress}% 100%)`;
+            progressText.textContent = `${Math.round(progress)}%`;
+            completedDays.textContent = completed;
+            
+            // تحديث الإحصائيات
+            document.getElementById('totalDays').textContent = `${total} يوم`;
+            document.getElementById('totalTools').textContent = `35+ أداة`;
+            document.getElementById('totalProjects').textContent = `25 مشروع`;
+        }
+
+        // دالة تعليم اليوم الحالي كمكتمل
+        function markCurrentDayComplete() {
+            // في تطبيق حقيقي، قد نستخدم تاريخ اليوم
+            // هنا سنختار عشوائيًا يومًا لتمثيل "اليوم الحالي"
+            const daysInCurrentWeek = roadmap[state.currentWeek].days;
+            const randomDay = daysInCurrentWeek[Math.floor(Math.random() * daysInCurrentWeek.length)].day;
+            toggleDayCompletion(randomDay);
+        }
+
+        // دالة إعادة تعيين التقدم
+        function resetProgress() {
+            if (confirm('هل أنت متأكد من رغبتك في إعادة تعيين كل تقدمك؟')) {
+                for (let i = 1; i <= 60; i++) {
+                    localStorage.removeItem(`day-${i}-completed`);
+                }
+                renderDays();
+                updateProgress();
+                updateCharts();
+                createWeekTabs();
+            }
+        }
+
+        // دالة لتهيئة الرسوم البيانية
+        function initCharts() {
+            const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+            const skillsCtx = document.getElementById('skillsChart').getContext('2d');
+            
+            // رسم بياني أسبوعي
+            weeklyChart = new Chart(weeklyCtx, {
+                type: 'bar',
+                data: {
+                    labels: roadmap.map(week => week.week.split(':')[0]),
+                    datasets: [{
+                        label: 'الأيام المكتملة',
+                        data: roadmap.map((week, index) => calculateWeekProgress(index)),
+                        backgroundColor: roadmap.map((_, index) => 
+                            index === state.currentWeek ? 'rgba(76, 201, 240, 0.8)' : 'rgba(67, 97, 238, 0.6)'
+                        ),
+                        borderColor: roadmap.map((_, index) => 
+                            index === state.currentWeek ? 'rgba(76, 201, 240, 1)' : 'rgba(67, 97, 238, 1)'
+                        ),
+                        borderWidth: 2,
+                        borderRadius: 5,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 7,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // رسم بياني للمهارات
+            skillsChart = new Chart(skillsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['البرومبت', 'الأتمتة', 'البرمجة', 'التكامل', 'المشاريع'],
+                    datasets: [{
+                        data: [25, 20, 15, 20, 20],
+                        backgroundColor: [
+                            'rgba(67, 97, 238, 0.8)',
+                            'rgba(76, 201, 240, 0.8)',
+                            'rgba(114, 9, 183, 0.8)',
+                            'rgba(247, 37, 133, 0.8)',
+                            'rgba(72, 149, 239, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(67, 97, 238, 1)',
+                            'rgba(76, 201, 240, 1)',
+                            'rgba(114, 9, 183, 1)',
+                            'rgba(247, 37, 133, 1)',
+                            'rgba(72, 149, 239, 1)'
+                        ],
+                        borderWidth: 2,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            rtl: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // دالة تحديث الرسوم البيانية
+        function updateCharts() {
+            // تحديث الرسم البياني الأسبوعي
+            weeklyChart.data.datasets[0].data = roadmap.map((week, index) => calculateWeekProgress(index));
+            weeklyChart.data.datasets[0].backgroundColor = roadmap.map((_, index) => 
+                index === state.currentWeek ? 'rgba(76, 201, 240, 0.8)' : 'rgba(67, 97, 238, 0.6)'
+            );
+            weeklyChart.update();
+        }
+
+        // دالة إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // البحث
+            document.getElementById('searchInput').addEventListener('input', function() {
+                state.searchTerm = this.value;
+                renderDays();
+            });
+            
+            // الفلترة
+            document.querySelectorAll('.tabs .tab[data-filter]').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const filter = this.getAttribute('data-filter');
+                    state.currentFilter = filter;
+                    
+                    // تحديث الحالة النشطة للتبويبات
+                    document.querySelectorAll('.tabs .tab[data-filter]').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    renderDays();
+                });
+            });
+            
+            // الأزرار
+            document.getElementById('markComplete').addEventListener('click', markCurrentDayComplete);
+            document.getElementById('resetProgress').addEventListener('click', resetProgress);
+            document.getElementById('exportProgress').addEventListener('click', exportProgress);
+        }
+
+        // دالة تصدير التقدم
+        function exportProgress() {
+            let progressData = "تقرير تقدم خطة التعلم\n\n";
+            progressData += "تاريخ التصدير: " + new Date().toLocaleDateString('ar-EG') + "\n\n";
+            
+            let completed = 0;
+            for (let i = 1; i <= 60; i++) {
+                if (localStorage.getItem(`day-${i}-completed`) === 'true') {
+                    completed++;
+                }
+            }
+            
+            progressData += `إجمالي الأيام المكتملة: ${completed} من 60 (${Math.round((completed/60)*100)}%)\n\n`;
+            
+            roadmap.forEach(week => {
+                progressData += `${week.week}:\n`;
+                week.days.forEach(day => {
+                    const isCompleted = localStorage.getItem(`day-${day.day}-completed`) === 'true';
+                    progressData += `  - اليوم ${day.day}: ${day.title} ${isCompleted ? '✓' : '✗'}\n`;
+                });
+                progressData += "\n";
+            });
+            
+            const blob = new Blob([progressData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'تقرير-التقدم-خطة-التعلم.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // دالة لإنشاء العناصر العائمة
+        function createFloatingElements() {
+            const container = document.querySelector('.container');
+            for (let i = 0; i < 10; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.style.width = `${Math.random() * 40 + 20}px`;
+                element.style.height = element.style.width;
+                element.style.top = `${Math.random() * 100}%`;
+                element.style.left = `${Math.random() * 100}%`;
+                element.style.animationDuration = `${Math.random() * 20 + 10}s`;
+                element.style.animationDelay = `${Math.random() * 5}s`;
+                element.style.opacity = `${Math.random() * 0.3 + 0.1}`;
+                container.appendChild(element);
+            }
+        }
+
+        // دالة لتعيين رسالة تحفيز عشوائية
+        function setRandomMotivation() {
+            const motivationText = document.getElementById('motivationText');
+            const randomIndex = Math.floor(Math.random() * state.motivationMessages.length);
+            motivationText.textContent = state.motivationMessages[randomIndex];
+        }
+
+        // تهيئة التطبيق عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            
+            // تحديث رسالة التحفيز كل 10 ثواني
+            setInterval(setRandomMotivation, 10000);
+        });
+    </script>
+</body>
+</html>
